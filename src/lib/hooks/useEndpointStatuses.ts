@@ -8,8 +8,9 @@ export function useEndpointStatuses(
   return useQuery({
     queryKey: ['endpoints', 'statuses'],
     queryFn: async () => {
-      const res = await fetch(apiUrl('/api/v1/endpoints/statuses'))
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const url = apiUrl('/api/v1/endpoints/statuses')
+      const res = await fetch(url)
+      if (!res.ok) throw new Error(`Request to ${url} failed: HTTP ${res.status} ${res.statusText}`)
       return res.json() as Promise<EndpointStatuses>
     },
     ...options,
