@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import preact from '@preact/preset-vite'
 import UnoCSS from 'unocss/vite'
 
+const gatusUrl = process.env.GATUS_URL || 'http://localhost:8080'
+
 // CRITICAL: UnoCSS must come BEFORE preact preset
 export default defineConfig({
   plugins: [
@@ -17,10 +19,13 @@ export default defineConfig({
     },
   },
   server: {
+    host: '0.0.0.0',
+    allowedHosts: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: gatusUrl,
         changeOrigin: true,
+        secure: false,
       },
     },
   },
