@@ -14,17 +14,7 @@ Minimal, fast frontend replacement for Gatus — services displayed as status sq
 
 ## Tasks
 
-- [ ] Feature: Project scaffolding
-  - [ ] Initialize Vite + Preact project
-  - [ ] Configure preact/compat aliases
-  - [ ] Set up TanStack Query
-  - [ ] Configure UnoCSS
-  - [ ] Add TypeScript config
-- [ ] Feature: Gatus integration
-  - [ ] Add Gatus as git submodule
-  - [ ] Configure Vite dev proxy for /api/* (CORS workaround)
-  - [ ] Add configurable API base URL for production
-  - [ ] Test API connectivity against running Gatus instance
+- [ ] Test API connectivity against running Gatus instance
 - [ ] Feature: Status grid (v1)
   - [ ] Create API types from Gatus endpoints
   - [ ] Implement status fetching hook
@@ -39,6 +29,17 @@ Minimal, fast frontend replacement for Gatus — services displayed as status sq
   - [ ] Add docker-compose for local testing
 
 ## Completed
+
+- [x] Feature: Gatus integration (PR #2)
+  - [x] Add Gatus as git submodule
+  - [x] Configure Vite dev proxy for /api/* (CORS workaround)
+  - [x] Add configurable API base URL for production
+- [x] Feature: Project scaffolding (PR #1)
+  - [x] Initialize Vite + Preact project
+  - [x] Configure preact/compat aliases
+  - [x] Set up TanStack Query
+  - [x] Configure UnoCSS
+  - [x] Add TypeScript config
 
 ## References
 
