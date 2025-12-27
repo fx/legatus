@@ -9,9 +9,9 @@ Minimal frontend replacement for [Gatus](https://github.com/TwiN/gatus) — a se
 ## Commands
 
 ```bash
-npm run dev      # Start dev server (localhost:5173)
-npm run build    # Type-check and build for production
-npm run preview  # Preview production build
+bun run dev      # Start dev server (localhost:5173)
+bun run build    # Type-check and build for production
+bun run preview  # Preview production build
 ```
 
 ## Environment Variables
