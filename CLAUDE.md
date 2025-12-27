@@ -9,9 +9,9 @@ Minimal frontend replacement for [Gatus](https://github.com/TwiN/gatus) — a se
 ## Commands
 
 ```bash
-bun run dev      # Start dev server (localhost:5173)
-bun run build    # Type-check and build for production
-bun run preview  # Preview production build
+npm run dev      # Start dev server (localhost:5173)
+npm run build    # Type-check and build for production
+npm run preview  # Preview production build
 ```
 
 ## Environment Variables
@@ -23,8 +23,9 @@ bun run preview  # Preview production build
 **Preact + React compatibility**: Uses `preact/compat` aliases so React libraries (TanStack Query) work with Preact's smaller bundle. The aliases are configured in both `vite.config.ts` and `tsconfig.json`.
 
 **Gatus API integration**:
-- Development: Vite proxies `/api/*` to `localhost:8080` (run Gatus locally or via `vendor/gatus` submodule)
-- Production: Set `VITE_API_BASE_URL` env var; use `apiUrl()` from `src/lib/api.ts` to build API URLs
+- Development: Vite proxies `/api/*` to `GATUS_URL` env var (default: `localhost:8080`)
+- Production: Caddy reverse proxy handles `/api/*` routing to Gatus
+- Frontend always uses relative `/api/*` paths; proxy layer handles routing
 
 **Styling**: UnoCSS with Wind3 preset (Tailwind-compatible). In `vite.config.ts`, UnoCSS plugin must come BEFORE preact preset.
 
