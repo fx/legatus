@@ -15,7 +15,7 @@ Minimal, fast frontend replacement for Gatus — services displayed as status sq
 ## Tasks
 
 - [ ] Feature: Status grid (v1)
-  - [ ] Create API types from Gatus endpoints
+  - [x] Create API types from Gatus endpoints (PR #3)
   - [ ] Implement status fetching hook
   - [ ] Build status square component
     - [ ] Color-coded status indicator
