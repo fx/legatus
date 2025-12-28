@@ -17,10 +17,10 @@ Minimal, fast frontend replacement for Gatus — services displayed as status sq
 - [ ] Feature: Status grid (v1)
   - [x] Create API types from Gatus endpoints (PR #3)
   - [x] Implement status fetching hook (PR #4)
-  - [ ] Build status square component
-    - [ ] Color-coded status indicator
-    - [ ] Hover/tap to show details popover
-  - [ ] Create grid layout for all services
+  - [x] Build status square component (PR #5)
+    - [x] Color-coded status indicator
+    - [x] Hover/tap to show details popover
+  - [x] Create grid layout for all services (PR #5)
   - [ ] Add auto-refresh polling
 - [ ] Feature: Unit test coverage
   - [ ] Set up Vitest
