@@ -1,0 +1,18 @@
+# Sample Gatus configuration for testing
+# See https://github.com/TwiN/gatus for full documentation
+
+endpoints:
+  - name: Example
+    group: External
+    url: "https://example.com"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 1000"
+
+  - name: Google DNS
+    group: External
+    url: "https://dns.google"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
