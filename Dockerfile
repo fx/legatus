@@ -1,5 +1,5 @@
 # Build stage
-FROM oven/bun:1 AS builder
+FROM oven/bun:1.1 AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY . .
 RUN bun run build
 
 # Production stage
-FROM caddy:2-alpine
+FROM caddy:2.9-alpine
 
 # Copy built assets from builder
 COPY --from=builder /app/dist /srv
