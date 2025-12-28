@@ -1,6 +1,12 @@
 :80 {
     encode gzip zstd
 
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'"
+    }
+
     handle /api/* {
         reverse_proxy {$GATUS_URL:gatus:8080} {
             header_up Host {upstream_hostport}
@@ -11,5 +17,8 @@
         root * /srv
         try_files {path} /index.html
         file_server
+
+        @assets path /assets/*
+        header @assets Cache-Control "public, max-age=31536000, immutable"
     }
 }
