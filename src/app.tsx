@@ -10,8 +10,15 @@ export function App() {
         <div class="flex items-center gap-3 mb-6">
           <h1 class="text-3xl font-bold">Gatus Status</h1>
           {isFetching && !isLoading && (
-            <div class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
-              <div class="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            <div
+              class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
+              role="status"
+              aria-live="polite"
+            >
+              <div
+                class="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"
+                aria-hidden="true"
+              />
               <span>Refreshing...</span>
             </div>
           )}
