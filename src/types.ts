@@ -54,3 +54,15 @@ export interface ProcessedEndpoint {
 export interface ProcessedEndpointsData {
   endpoints: ProcessedEndpoint[];
 }
+
+/** Available theme names */
+export type Theme = 'github' | 'gatus' | 'tui';
+
+/** Available color modes */
+export type ColorMode = 'light' | 'dark' | 'system';
+
+/** Theme configuration stored in localStorage */
+export interface ThemeConfig {
+  theme: Theme;
+  colorMode: ColorMode;
+}

@@ -1,8 +1,11 @@
 import type {
+  ColorMode,
   EndpointStatus,
   ProcessedCondition,
   ProcessedEndpoint,
   ProcessedEndpointsData,
+  Theme,
+  ThemeConfig,
 } from './types';
 
 /**
@@ -112,8 +115,123 @@ export function preprocessEndpoints(endpoints: EndpointStatus[]): ProcessedEndpo
   };
 }
 
-// Browser-only code: HTMX event handlers
+/**
+ * Theme Controller - manages theme and color mode preferences
+ */
+export const ThemeController = {
+  STORAGE_KEYS: {
+    theme: 'gatus-minimal:theme',
+    colorMode: 'gatus-minimal:color-mode',
+  } as const,
+
+  DEFAULTS: {
+    theme: 'gatus' as Theme,
+    colorMode: 'system' as ColorMode,
+  } as const,
+
+  VALID_THEMES: ['github', 'gatus', 'tui'] as const,
+  VALID_COLOR_MODES: ['light', 'dark', 'system'] as const,
+
+  /**
+   * Get current theme configuration from localStorage with fallbacks
+   */
+  getConfig(): ThemeConfig {
+    if (typeof localStorage === 'undefined') {
+      return { ...this.DEFAULTS };
+    }
+
+    const storedTheme = localStorage.getItem(this.STORAGE_KEYS.theme);
+    const storedColorMode = localStorage.getItem(this.STORAGE_KEYS.colorMode);
+
+    const theme = this.VALID_THEMES.includes(storedTheme as Theme)
+      ? (storedTheme as Theme)
+      : this.DEFAULTS.theme;
+
+    const colorMode = this.VALID_COLOR_MODES.includes(storedColorMode as ColorMode)
+      ? (storedColorMode as ColorMode)
+      : this.DEFAULTS.colorMode;
+
+    return { theme, colorMode };
+  },
+
+  /**
+   * Set theme and persist to localStorage
+   */
+  setTheme(theme: Theme): void {
+    if (!this.VALID_THEMES.includes(theme)) {
+      return;
+    }
+    localStorage.setItem(this.STORAGE_KEYS.theme, theme);
+    document.documentElement.setAttribute('data-theme', theme);
+  },
+
+  /**
+   * Set color mode and persist to localStorage
+   */
+  setColorMode(colorMode: ColorMode): void {
+    if (!this.VALID_COLOR_MODES.includes(colorMode)) {
+      return;
+    }
+    localStorage.setItem(this.STORAGE_KEYS.colorMode, colorMode);
+    document.documentElement.setAttribute('data-color-mode', colorMode);
+  },
+
+  /**
+   * Apply current config to document
+   */
+  applyConfig(): void {
+    const config = this.getConfig();
+    document.documentElement.setAttribute('data-theme', config.theme);
+    document.documentElement.setAttribute('data-color-mode', config.colorMode);
+  },
+
+  /**
+   * Sync select elements with current config
+   */
+  syncUI(): void {
+    const config = this.getConfig();
+    const themeSelect = document.getElementById('theme-select') as HTMLSelectElement | null;
+    const colorModeSelect = document.getElementById('color-mode-select') as HTMLSelectElement | null;
+
+    if (themeSelect) {
+      themeSelect.value = config.theme;
+    }
+    if (colorModeSelect) {
+      colorModeSelect.value = config.colorMode;
+    }
+  },
+
+  /**
+   * Initialize theme controller: apply config and bind UI listeners
+   */
+  init(): void {
+    this.applyConfig();
+    this.syncUI();
+
+    const themeSelect = document.getElementById('theme-select') as HTMLSelectElement | null;
+    const colorModeSelect = document.getElementById('color-mode-select') as HTMLSelectElement | null;
+
+    if (themeSelect) {
+      themeSelect.addEventListener('change', (e) => {
+        const target = e.target as HTMLSelectElement;
+        this.setTheme(target.value as Theme);
+      });
+    }
+
+    if (colorModeSelect) {
+      colorModeSelect.addEventListener('change', (e) => {
+        const target = e.target as HTMLSelectElement;
+        this.setColorMode(target.value as ColorMode);
+      });
+    }
+  },
+};
+
+// Browser-only code: HTMX event handlers and theme initialization
 if (typeof document !== 'undefined') {
+  // Initialize theme controller
+  ThemeController.init();
+
   // Register preprocessor with HTMX client-side-templates
   document.body.addEventListener('htmx:configRequest', (event: Event) => {
     // Ensure JSON response type
