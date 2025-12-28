@@ -27,7 +27,9 @@ RUN apk add --no-cache bash
 COPY --from=gatus-builder /build/gatus /usr/local/bin/gatus
 
 # Copy frontend static files
-COPY --from=frontend-builder /app/dist /srv
+COPY --from=frontend-builder /app/index.html /srv/
+COPY --from=frontend-builder /app/styles.css /srv/
+COPY --from=frontend-builder /app/dist /srv/dist
 
 # Copy Caddy configuration
 COPY Caddyfile /etc/caddy/Caddyfile
