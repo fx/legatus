@@ -1,18 +1,8 @@
-import { defineConfig, mergeConfig } from 'vitest/config'
-import viteConfig from './vite.config'
+import { defineConfig } from 'vitest/config';
 
-export default mergeConfig(
-  viteConfig({ mode: 'test', command: 'serve' }),
-  defineConfig({
-    test: {
-      globals: true,
-      environment: 'jsdom',
-      setupFiles: ['./vitest-setup.ts'],
-      server: {
-        deps: {
-          inline: ['@tanstack/react-query'],
-        },
-      },
-    },
-  })
-)
+export default defineConfig({
+  test: {
+    include: ['src/**/*.test.ts'],
+    environment: 'node',
+  },
+});
