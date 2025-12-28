@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, within } from '@testing-library/preact'
+import { render, screen } from '@testing-library/preact'
 import { StatusSquare } from './StatusSquare'
 import type { EndpointStatus } from '@/lib/types/api'
 
