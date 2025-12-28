@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { formatDuration, formatTimestamp, preprocessEndpoint } from './app';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { ThemeController, formatDuration, formatTimestamp, preprocessEndpoint } from './app';
 import type { EndpointStatus } from './types';
 
 describe('formatDuration', () => {
@@ -176,5 +176,122 @@ describe('preprocessEndpoint', () => {
 
     expect(result.hasConditions).toBe(false);
     expect(result.conditions).toBeUndefined();
+  });
+});
+
+describe('ThemeController', () => {
+  // Mock localStorage
+  const localStorageMock = (() => {
+    let store: Record<string, string> = {};
+    return {
+      getItem: (key: string) => store[key] ?? null,
+      setItem: (key: string, value: string) => {
+        store[key] = value;
+      },
+      removeItem: (key: string) => {
+        delete store[key];
+      },
+      clear: () => {
+        store = {};
+      },
+    };
+  })();
+
+  // Mock document.documentElement
+  const mockDocumentElement = {
+    setAttribute: vi.fn(),
+  };
+
+  beforeEach(() => {
+    vi.stubGlobal('localStorage', localStorageMock);
+    vi.stubGlobal('document', {
+      documentElement: mockDocumentElement,
+      getElementById: vi.fn().mockReturnValue(null),
+    });
+    localStorageMock.clear();
+    mockDocumentElement.setAttribute.mockClear();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  describe('getConfig', () => {
+    it('returns defaults when localStorage is empty', () => {
+      const config = ThemeController.getConfig();
+      expect(config.theme).toBe('gatus');
+      expect(config.colorMode).toBe('system');
+    });
+
+    it('reads valid values from localStorage', () => {
+      localStorageMock.setItem('gatus-minimal:theme', 'github');
+      localStorageMock.setItem('gatus-minimal:color-mode', 'dark');
+
+      const config = ThemeController.getConfig();
+      expect(config.theme).toBe('github');
+      expect(config.colorMode).toBe('dark');
+    });
+
+    it('falls back to defaults for invalid theme value', () => {
+      localStorageMock.setItem('gatus-minimal:theme', 'invalid-theme');
+      localStorageMock.setItem('gatus-minimal:color-mode', 'light');
+
+      const config = ThemeController.getConfig();
+      expect(config.theme).toBe('gatus');
+      expect(config.colorMode).toBe('light');
+    });
+
+    it('falls back to defaults for invalid color mode value', () => {
+      localStorageMock.setItem('gatus-minimal:theme', 'tui');
+      localStorageMock.setItem('gatus-minimal:color-mode', 'auto');
+
+      const config = ThemeController.getConfig();
+      expect(config.theme).toBe('tui');
+      expect(config.colorMode).toBe('system');
+    });
+  });
+
+  describe('setTheme', () => {
+    it('updates localStorage and document attribute', () => {
+      ThemeController.setTheme('github');
+
+      expect(localStorageMock.getItem('gatus-minimal:theme')).toBe('github');
+      expect(mockDocumentElement.setAttribute).toHaveBeenCalledWith('data-theme', 'github');
+    });
+
+    it('ignores invalid theme values', () => {
+      ThemeController.setTheme('invalid' as 'github');
+
+      expect(localStorageMock.getItem('gatus-minimal:theme')).toBeNull();
+      expect(mockDocumentElement.setAttribute).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('setColorMode', () => {
+    it('updates localStorage and document attribute', () => {
+      ThemeController.setColorMode('dark');
+
+      expect(localStorageMock.getItem('gatus-minimal:color-mode')).toBe('dark');
+      expect(mockDocumentElement.setAttribute).toHaveBeenCalledWith('data-color-mode', 'dark');
+    });
+
+    it('ignores invalid color mode values', () => {
+      ThemeController.setColorMode('auto' as 'dark');
+
+      expect(localStorageMock.getItem('gatus-minimal:color-mode')).toBeNull();
+      expect(mockDocumentElement.setAttribute).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('applyConfig', () => {
+    it('applies current config to document', () => {
+      localStorageMock.setItem('gatus-minimal:theme', 'tui');
+      localStorageMock.setItem('gatus-minimal:color-mode', 'light');
+
+      ThemeController.applyConfig();
+
+      expect(mockDocumentElement.setAttribute).toHaveBeenCalledWith('data-theme', 'tui');
+      expect(mockDocumentElement.setAttribute).toHaveBeenCalledWith('data-color-mode', 'light');
+    });
   });
 });
