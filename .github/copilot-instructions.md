@@ -21,6 +21,10 @@
 
 - **Relative API paths**: Frontend always uses relative `/api/*` paths. Proxy layer (Vite dev, Caddy prod) handles routing to Gatus. This is the intended architecture.
 
+### Docker Configuration
+
+- **PORT default of 80**: The docker-compose PORT default is intentionally 80 (standard HTTP). Users override via env var for local testing. Do not flag as inconsistent with examples.
+
 ### Code Style
 
 - **Minimal comments**: Do not suggest adding explanatory comments for self-documenting code. We follow a minimal comments philosophy.
