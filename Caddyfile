@@ -2,7 +2,9 @@
     encode gzip zstd
 
     handle /api/* {
-        reverse_proxy gatus:8080
+        reverse_proxy {$GATUS_URL:gatus:8080} {
+            header_up Host {upstream_hostport}
+        }
     }
 
     handle {
