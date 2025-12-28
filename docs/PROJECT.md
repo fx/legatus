@@ -23,7 +23,8 @@ Minimal, fast frontend replacement for Gatus — services displayed as status sq
   - [x] Create grid layout for all services (PR #5)
   - [ ] Add auto-refresh polling
 - [ ] Feature: Unit test coverage
-  - [ ] Set up Vitest
+  - [x] Set up Vitest (PR #5)
+  - [x] Add tests for format utility functions (PR #5)
   - [ ] Add tests for API utility functions
   - [ ] Add tests for status components
 - [ ] Feature: Docker image

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { formatDuration, formatTimestamp } from './format'
 
 describe('formatDuration', () => {
-  it('returns 0ms for 0 nanoseconds', () => {
+  it('returns 0µs for 0 nanoseconds', () => {
     expect(formatDuration(0)).toBe('0µs')
   })
 

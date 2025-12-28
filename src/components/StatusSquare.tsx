@@ -98,7 +98,7 @@ export function StatusSquare({ endpoint, size = 'md' }: StatusSquareProps) {
           text-gray-900 dark:text-gray-100
           border border-gray-200 dark:border-gray-700
           max-w-xs
-          [&:popover-open]:animate-fade-in
+          [&:popover-open]:opacity-100
         "
       >
         <div class="space-y-2">
