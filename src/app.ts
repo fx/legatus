@@ -75,12 +75,12 @@ export function preprocessEndpoint(endpoint: EndpointStatus, index: number): Pro
   }
 
   const result: ProcessedEndpoint = {
-    index: index,
+    index,
     name: endpoint.name,
     group: endpoint.group || null,
     key: endpoint.key,
-    statusClass: statusClass,
-    statusLabel: statusLabel,
+    statusClass,
+    statusLabel,
     hasResult: !!latestResult,
   };
 
@@ -135,6 +135,11 @@ if (typeof document !== 'undefined') {
         detail.serverResponse = JSON.stringify(processed);
       } catch (e) {
         console.error('Failed to preprocess endpoints:', e);
+        detail.shouldSwap = false;
+        if (detail.target && 'innerHTML' in detail.target) {
+          detail.target.innerHTML =
+            '<div class="error-message">Unable to load endpoint statuses. Please try again later.</div>';
+        }
       }
     }
   });

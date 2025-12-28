@@ -327,6 +327,19 @@ body {
   color: #ef4444;
 }
 
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #ef4444;
+  font-size: 0.875rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .error-message {
+    color: #f87171;
+  }
+}
+
 /* HTMX loading indicator */
 .htmx-request .loading-container {
   display: flex;
