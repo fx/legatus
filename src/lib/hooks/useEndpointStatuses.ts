@@ -13,6 +13,7 @@ export function useEndpointStatuses(
       if (!res.ok) throw new Error(`Request to ${url} failed: HTTP ${res.status} ${res.statusText}`)
       return res.json() as Promise<EndpointStatuses>
     },
+    refetchInterval: 30_000,
     ...options,
   })
 }
