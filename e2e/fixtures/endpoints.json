@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Frontend",
+    "group": "web",
+    "key": "web_frontend",
+    "results": [
+      {
+        "status": 200,
+        "hostname": "frontend.example.com",
+        "duration": 45000000,
+        "timestamp": "2025-01-15T12:00:00Z",
+        "conditionResults": [
+          { "condition": "[STATUS] == 200", "success": true },
+          { "condition": "[RESPONSE_TIME] < 500", "success": true }
+        ],
+        "success": true
+      }
+    ]
+  },
+  {
+    "name": "API Gateway",
+    "group": "backend",
+    "key": "backend_api-gateway",
+    "results": [
+      {
+        "status": 200,
+        "hostname": "api.example.com",
+        "duration": 120000000,
+        "timestamp": "2025-01-15T12:00:00Z",
+        "conditionResults": [{ "condition": "[STATUS] == 200", "success": true }],
+        "success": true
+      }
+    ]
+  },
+  {
+    "name": "Database",
+    "group": "infra",
+    "key": "infra_database",
+    "results": [
+      {
+        "status": 500,
+        "hostname": "db.example.com",
+        "duration": 5000000000,
+        "timestamp": "2025-01-15T12:00:00Z",
+        "conditionResults": [{ "condition": "[STATUS] == 200", "success": false }],
+        "success": false
+      }
+    ]
+  },
+  {
+    "name": "Cache",
+    "key": "cache",
+    "results": []
+  }
+]

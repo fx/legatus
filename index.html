@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gatus Status</title>
     <link rel="stylesheet" href="/styles.css" />
-    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-M06VwgoUOHG3FN0UchwWKqh9jS4ejwpoL0yjF3EVljtsxFwFETEYMkyNL5lXbJ5/" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/mustache@4.2.0/mustache.min.js" integrity="sha384-WASZCYHGuIg0bwkJEH65mhmbKS1x4/VKI2bzElPKmL5B3e0UaH45nIdqOm+BUuRA" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx-ext-client-side-templates@2.0.1/client-side-templates.js" integrity="sha384-5HS4cYYiDPe+JJZnvMgSQ6D8BKodgzgxrgv+vrvEzTK0vLTU5ou9BMiyrn+9xGaX" crossorigin="anonymous"></script>
   </head>
@@ -79,13 +79,13 @@
       hx-ext="client-side-templates"
       hx-get="/api/v1/endpoints/statuses"
       hx-trigger="load, every 30s"
-      mustache-array-template="endpoints-template"
+      mustache-template="endpoints-template"
     >
       <div class="loading-container">
         <div class="loading-spinner"></div>
       </div>
     </div>
 
-    <script src="/dist/app.js"></script>
+    <script type="module" src="/dist/app.js"></script>
   </body>
 </html>
