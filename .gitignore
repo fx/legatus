@@ -1,18 +1,12 @@
 # Dependencies
 node_modules/
 
-# Build output - NOT ignored since we deploy compiled JS
-# dist/
-
 # Test results
 test-results/
 playwright-report/
 
 # TypeScript build info
 *.tsbuildinfo
-# Generated declaration files (except src/vite-env.d.ts)
-/uno.config.d.ts
-/vite.config.d.ts
 
 # Environment files
 .env

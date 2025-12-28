@@ -4,49 +4,60 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Minimal frontend replacement for [Gatus](https://github.com/TwiN/gatus) — a service health monitoring tool. Displays services as status squares with hover/tap details.
+Minimal frontend replacement for [Gatus](https://github.com/TwiN/gatus) — a service health monitoring tool. Displays services as status squares with hover/tap details. Ships as a single Docker image containing Gatus + Caddy + frontend.
 
 ## Tech Stack
 
-- **HTMX**: Declarative AJAX and DOM updates
+- **HTMX**: Declarative AJAX and DOM updates (30s auto-refresh)
 - **Mustache**: Client-side templating via htmx-ext-client-side-templates
 - **Popover API**: Native browser API for status detail popovers
-- **Plain CSS**: No build step, dark mode via prefers-color-scheme
-- **Caddy**: Static file serving + reverse proxy to Gatus API
+- **Plain CSS**: Dark mode via prefers-color-scheme (no CSS build)
+- **TypeScript**: Utility functions compiled to JS (`src/app.ts` → `dist/app.js`)
+- **Caddy**: Static file serving + reverse proxy to Gatus
+- **Gatus**: Vendored as submodule, built into Docker image
+
+## Commands
+
+```bash
+bun run dev      # Start dev server with API proxy (requires GATUS_URL in .env)
+bun run build    # Compile TypeScript to dist/app.js
+bun run test     # Run Vitest unit tests
+bun run test:e2e # Run Playwright E2E tests
+bun run lint     # Run Biome linter
+```
 
 ## Architecture
 
-**Static files only**: No build step required. The entire frontend is:
-- `index.html` - HTMX app with Mustache template and inline JS for data preprocessing
-- `styles.css` - Plain CSS with grid layout, status colors, dark mode
+**All-in-one Docker image**: Single container runs both Gatus and Caddy.
 
-**Gatus API integration**:
-- Caddy reverse proxies `/api/*` to Gatus backend (configured via `GATUS_URL` env var)
-- Frontend fetches from `/api/v1/endpoints/statuses` with 30s auto-refresh
-- Response preprocessed client-side before Mustache rendering
-
-**CDN dependencies** (loaded from unpkg.com):
-- htmx.org@2.0.4
-- mustache@4.2.0
-- htmx-ext-client-side-templates@2.0.1
-
-## Development
-
-Open `index.html` in a browser with a running Gatus instance, or use Docker:
-
-```bash
-docker compose up
 ```
+┌────────────────────────────────────┐
+│         Docker Container           │
+│  Caddy (:80) ──▶ Gatus (:8080)    │
+│  /api/* proxy    /srv/* static    │
+└────────────────────────────────────┘
+```
+
+**Frontend files**:
+- `index.html` - HTMX app with Mustache template
+- `styles.css` - Plain CSS (grid, colors, dark mode)
+- `dist/app.js` - Compiled TypeScript utilities
+
+**Gatus API**: Frontend fetches `/api/v1/endpoints/statuses` with 30s polling.
 
 ## Key Files
 
-- `index.html` - Main app with HTMX, Mustache template, and preprocessing logic
-- `styles.css` - All styles including grid, colors, popovers, dark mode
-- `Caddyfile` - Caddy configuration for static serving and API proxy
-- `Dockerfile` - Simple static file copy to Caddy
+- `index.html`, `styles.css` - Frontend static files
+- `src/app.ts` - TypeScript utilities (formatDuration, preprocessEndpoint)
+- `Dockerfile` - Multi-stage build (Gatus + frontend + Caddy)
+- `docker-entrypoint.sh` - Starts both Gatus and Caddy
+- `Caddyfile` - Static serving + API proxy config
+- `vendor/gatus` - Gatus submodule (pinned version)
+- `config/config.yaml` - Gatus configuration
 
 ## Environment Variables
 
-**Never commit sensitive information** including API keys, hostnames (even public ones), tokens, or credentials.
+**Never commit sensitive information** including API keys, hostnames, tokens, or credentials.
 
-- `GATUS_URL` - Gatus backend URL (default: `gatus:8080` in Docker)
+- `GATUS_URL` - For dev server proxy (e.g., `https://status.example.com`)
+- `PORT` - Host port for Docker (default: 80)
