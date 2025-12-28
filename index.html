@@ -1,15 +1,46 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="gatus" data-color-mode="system">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gatus Status</title>
+    <!-- Prevent FOUC: Apply theme from localStorage before CSS loads -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem('gatus-minimal:theme') || 'gatus';
+        var colorMode = localStorage.getItem('gatus-minimal:color-mode') || 'system';
+        if (['github', 'gatus', 'tui'].indexOf(theme) === -1) theme = 'gatus';
+        if (['light', 'dark', 'system'].indexOf(colorMode) === -1) colorMode = 'system';
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-color-mode', colorMode);
+      })();
+    </script>
     <link rel="stylesheet" href="/styles.css" />
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/mustache@4.2.0/mustache.min.js" integrity="sha384-WASZCYHGuIg0bwkJEH65mhmbKS1x4/VKI2bzElPKmL5B3e0UaH45nIdqOm+BUuRA" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx-ext-client-side-templates@2.0.1/client-side-templates.js" integrity="sha384-5HS4cYYiDPe+JJZnvMgSQ6D8BKodgzgxrgv+vrvEzTK0vLTU5ou9BMiyrn+9xGaX" crossorigin="anonymous"></script>
   </head>
   <body>
+    <!-- Theme Switcher Header -->
+    <header class="theme-header">
+      <div class="theme-controls">
+        <label for="theme-select">Theme</label>
+        <select id="theme-select">
+          <option value="gatus">Gatus</option>
+          <option value="github">GitHub</option>
+          <option value="tui">TUI</option>
+        </select>
+      </div>
+      <div class="theme-controls">
+        <label for="color-mode-select">Mode</label>
+        <select id="color-mode-select">
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
+    </header>
+
     <!-- Mustache template for endpoints -->
     <template id="endpoints-template">
       <div class="status-grid">
