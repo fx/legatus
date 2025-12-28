@@ -1,3 +1,6 @@
+// Skip TLS verification for dev (self-signed certs)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 const GATUS_URL = process.env.GATUS_URL || "http://localhost:8080";
 const PORT = 5173;
 
@@ -15,16 +18,23 @@ Bun.serve({
 
     // Proxy API requests to Gatus
     if (path.startsWith("/api/")) {
-      const target = `${GATUS_URL}${path}${url.search}`;
-      const res = await fetch(target, {
-        method: req.method,
-        headers: req.headers,
-        body: req.body,
-      });
-      return new Response(res.body, {
-        status: res.status,
-        headers: res.headers,
-      });
+      const target = new URL(`${path}${url.search}`, GATUS_URL);
+      const headers = new Headers(req.headers);
+      headers.set("Host", target.host);
+      try {
+        const res = await fetch(target.href, {
+          method: req.method,
+          headers,
+          body: req.body,
+        });
+        return new Response(res.body, {
+          status: res.status,
+          headers: res.headers,
+        });
+      } catch (e) {
+        console.error(`Proxy error: ${e}`);
+        return new Response("Proxy error", { status: 502 });
+      }
     }
 
     // Serve static files
