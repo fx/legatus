@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run build --watch",
+    "dev": "bun run build && bun dev-server.ts",
     "build": "bun build src/app.ts --outdir dist --minify",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
