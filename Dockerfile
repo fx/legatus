@@ -1,10 +1,8 @@
-# Stage 1: Build Gatus from source
+# Stage 1: Build Gatus from vendored source
 FROM golang:1.23-alpine AS gatus-builder
 
-RUN apk add --no-cache git
-
 WORKDIR /build
-RUN git clone --depth 1 https://github.com/TwiN/gatus.git .
+COPY vendor/gatus .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
 
 # Stage 2: Build frontend
