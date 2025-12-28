@@ -21,7 +21,7 @@ Minimal, fast frontend replacement for Gatus — services displayed as status sq
     - [x] Color-coded status indicator
     - [x] Hover/tap to show details popover
   - [x] Create grid layout for all services (PR #5)
-  - [ ] Add auto-refresh polling
+  - [x] Add auto-refresh polling (PR #6)
 - [ ] Feature: Unit test coverage
   - [x] Set up Vitest (PR #5)
   - [x] Add tests for format utility functions (PR #5)
