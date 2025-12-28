@@ -2,12 +2,20 @@ import { useEndpointStatuses } from '@/lib/hooks/useEndpointStatuses'
 import { StatusSquare } from '@/components'
 
 export function App() {
-  const { data, isLoading, error } = useEndpointStatuses()
+  const { data, isLoading, isFetching, error } = useEndpointStatuses()
 
   return (
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-8">
       <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Gatus Status</h1>
+        <div class="flex items-center gap-3 mb-6">
+          <h1 class="text-3xl font-bold">Gatus Status</h1>
+          {isFetching && !isLoading && (
+            <div class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+              <div class="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <span>Refreshing...</span>
+            </div>
+          )}
+        </div>
 
         {/* Loading state */}
         {isLoading && (
