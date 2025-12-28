@@ -31,6 +31,12 @@ export function formatDuration(nanoseconds: number): string {
  */
 export function formatTimestamp(isoString: string): string {
   const date = new Date(isoString)
+
+  // Validate the date is valid
+  if (Number.isNaN(date.getTime())) {
+    return 'Unknown'
+  }
+
   const now = new Date()
   const diffMs = now.getTime() - date.getTime()
   const diffSeconds = Math.floor(diffMs / 1000)
