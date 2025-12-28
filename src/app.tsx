@@ -1,15 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
-import { apiUrl } from '@/lib/api'
+import { useEndpointStatuses } from '@/lib/hooks/useEndpointStatuses'
 
 export function App() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['endpoints'],
-    queryFn: async () => {
-      const res = await fetch(apiUrl('/api/v1/endpoints/statuses'))
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      return res.json()
-    },
-  })
+  const { data, isLoading, error } = useEndpointStatuses()
 
   return (
     <div class="min-h-screen bg-gray-900 text-white flex items-center justify-center">
