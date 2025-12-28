@@ -1,0 +1,337 @@
+/* Gatus Minimal Frontend - Plain CSS */
+
+/* Reset and base styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  background-color: #f9fafb;
+  color: #111827;
+  min-height: 100vh;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111827;
+    color: #f9fafb;
+  }
+}
+
+/* Status grid container */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  gap: 0.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Status square button */
+.status-square {
+  width: 100%;
+  aspect-ratio: 1;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.status-square:hover {
+  transform: scale(1.05);
+}
+
+.status-square:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .status-square:focus {
+    outline-offset: 2px;
+  }
+}
+
+/* Status colors */
+.status-healthy {
+  background-color: #22c55e;
+}
+
+.status-unhealthy {
+  background-color: #ef4444;
+}
+
+.status-unknown {
+  background-color: #9ca3af;
+}
+
+@media (prefers-color-scheme: dark) {
+  .status-healthy {
+    background-color: #16a34a;
+  }
+
+  .status-unhealthy {
+    background-color: #dc2626;
+  }
+
+  .status-unknown {
+    background-color: #4b5563;
+  }
+}
+
+/* Popover styles */
+.status-popover {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  background-color: #fff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  max-width: 20rem;
+  margin: 0;
+}
+
+.status-popover::backdrop {
+  background: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  .status-popover {
+    background-color: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+  }
+}
+
+/* Popover header */
+.popover-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.popover-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.popover-group {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .popover-group {
+    color: #9ca3af;
+  }
+}
+
+/* Status badge */
+.status-badge {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.status-badge-healthy {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-badge-unhealthy {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-badge-unknown {
+  background-color: #e5e7eb;
+  color: #4b5563;
+}
+
+@media (prefers-color-scheme: dark) {
+  .status-badge-healthy {
+    background-color: rgba(22, 163, 74, 0.3);
+    color: #4ade80;
+  }
+
+  .status-badge-unhealthy {
+    background-color: rgba(220, 38, 38, 0.3);
+    color: #f87171;
+  }
+
+  .status-badge-unknown {
+    background-color: #374151;
+    color: #9ca3af;
+  }
+}
+
+/* Popover details */
+.popover-details {
+  font-size: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .popover-details {
+    border-top-color: #374151;
+  }
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.detail-label {
+  color: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  .detail-label {
+    color: #9ca3af;
+  }
+}
+
+.detail-value {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+    monospace;
+}
+
+/* Conditions section */
+.conditions-section {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .conditions-section {
+    border-top-color: #374151;
+  }
+}
+
+.conditions-title {
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .conditions-title {
+    color: #9ca3af;
+  }
+}
+
+.conditions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.condition-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.125rem;
+}
+
+.condition-icon-success {
+  color: #22c55e;
+}
+
+.condition-icon-failure {
+  color: #ef4444;
+}
+
+.condition-text {
+  font-size: 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+    monospace;
+  background-color: #f3f4f6;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .condition-text {
+    background-color: #374151;
+  }
+}
+
+/* No results message */
+.no-results {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+@media (prefers-color-scheme: dark) {
+  .no-results {
+    color: #9ca3af;
+  }
+}
+
+/* Loading spinner */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .loading-spinner {
+    border-color: #374151;
+    border-top-color: #3b82f6;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error message */
+.error-container {
+  text-align: center;
+  padding: 2rem;
+  color: #ef4444;
+}
+
+/* HTMX loading indicator */
+.htmx-request .loading-container {
+  display: flex;
+}
+
+.htmx-request .status-grid {
+  opacity: 0.5;
+}
