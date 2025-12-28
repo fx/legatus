@@ -1,4 +1,4 @@
-import { useRef, useCallback, useId } from 'preact/hooks'
+import { useRef, useCallback, useId, useEffect } from 'preact/hooks'
 import type { EndpointStatus } from '@/lib/types/api'
 import { formatDuration, formatTimestamp } from '@/lib/utils/format'
 
@@ -53,6 +53,15 @@ export function StatusSquare({ endpoint, size = 'md' }: StatusSquareProps) {
       timeoutRef.current = null
     }
     popoverRef.current?.hidePopover()
+  }, [])
+
+  // Cleanup timeout on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
   }, [])
 
   const statusLabel = latestResult
