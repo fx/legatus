@@ -29,3 +29,8 @@
 
 - **Minimal comments**: Do not suggest adding explanatory comments for self-documenting code. We follow a minimal comments philosophy.
 - **Semver ranges are intentional**: Using `^x.y.z` in package.json is intentional. Do not suggest pinning to exact resolved versions.
+- **ASCII microsecond notation**: Use `us` (ASCII) not `µs` (Greek mu) for microseconds. This is intentional for ASCII compatibility across terminals and editors.
+
+### Development Server
+
+- **dev-server.ts is dev-only**: The `dev-server.ts` file is exclusively for local development. TLS verification skip and other dev conveniences are intentional. Do not flag security concerns for dev-only files.
