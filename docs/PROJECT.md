@@ -26,7 +26,7 @@ Minimal, fast frontend replacement for Gatus — services displayed as status sq
   - [x] Set up Vitest (PR #5)
   - [x] Add tests for format utility functions (PR #5)
   - [x] Add tests for API utility functions (PR #7)
-  - [ ] Add tests for status components
+  - [x] Add tests for status components (PR #8)
 - [ ] Feature: Docker image
   - [ ] Create Dockerfile (Gatus + Caddy + frontend)
   - [ ] Write Caddyfile (static files + /api/* proxy to Gatus)
