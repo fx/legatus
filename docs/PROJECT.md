@@ -18,6 +18,11 @@ Minimal, fast frontend replacement for Gatus — services displayed as status sq
 
 ## Completed
 
+- [x] Feature: Multi-theme support with light/dark/system modes (PR #11)
+  - [x] CSS custom properties and theme definitions (github, gatus, tui)
+  - [x] Theme switcher UI with FOUC prevention
+  - [x] ThemeController for preference management with localStorage persistence
+  - [x] Unit and E2E tests for theme functionality
 - [x] Feature: All-in-one Docker image (PR #10)
   - [x] Multi-stage Dockerfile with vendored Gatus
   - [x] Entrypoint script running Gatus + Caddy
