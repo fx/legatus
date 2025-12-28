@@ -21,15 +21,20 @@ Bun.serve({
       const target = new URL(`${path}${url.search}`, GATUS_URL);
       const headers = new Headers(req.headers);
       headers.set("Host", target.host);
+      headers.delete("Accept-Encoding"); // Avoid compression issues
       try {
         const res = await fetch(target.href, {
           method: req.method,
           headers,
           body: req.body,
         });
+        // Copy response headers but remove problematic ones
+        const respHeaders = new Headers(res.headers);
+        respHeaders.delete("Content-Encoding");
+        respHeaders.delete("Content-Length");
         return new Response(res.body, {
           status: res.status,
-          headers: res.headers,
+          headers: respHeaders,
         });
       } catch (e) {
         console.error(`Proxy error: ${e}`);
