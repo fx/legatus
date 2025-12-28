@@ -191,7 +191,9 @@ export const ThemeController = {
   syncUI(): void {
     const config = this.getConfig();
     const themeSelect = document.getElementById('theme-select') as HTMLSelectElement | null;
-    const colorModeSelect = document.getElementById('color-mode-select') as HTMLSelectElement | null;
+    const colorModeSelect = document.getElementById(
+      'color-mode-select',
+    ) as HTMLSelectElement | null;
 
     if (themeSelect) {
       themeSelect.value = config.theme;
@@ -209,7 +211,9 @@ export const ThemeController = {
     this.syncUI();
 
     const themeSelect = document.getElementById('theme-select') as HTMLSelectElement | null;
-    const colorModeSelect = document.getElementById('color-mode-select') as HTMLSelectElement | null;
+    const colorModeSelect = document.getElementById(
+      'color-mode-select',
+    ) as HTMLSelectElement | null;
 
     if (themeSelect) {
       themeSelect.addEventListener('change', (e) => {
