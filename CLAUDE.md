@@ -6,40 +6,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Minimal frontend replacement for [Gatus](https://github.com/TwiN/gatus) — a service health monitoring tool. Displays services as status squares with hover/tap details.
 
-## Commands
+## Tech Stack
 
-```bash
-bun run dev      # Start dev server (localhost:5173)
-bun run build    # Type-check and build for production
-bun run preview  # Preview production build
-```
-
-## Environment Variables
-
-**Never commit sensitive information** including API keys, hostnames (even public ones), tokens, or credentials. Use `.env` files locally (already in `.gitignore`) and `.env.example` for documenting required variables without values.
+- **HTMX**: Declarative AJAX and DOM updates
+- **Mustache**: Client-side templating via htmx-ext-client-side-templates
+- **Popover API**: Native browser API for status detail popovers
+- **Plain CSS**: No build step, dark mode via prefers-color-scheme
+- **Caddy**: Static file serving + reverse proxy to Gatus API
 
 ## Architecture
 
-**Preact + React compatibility**: Uses `preact/compat` aliases so React libraries (TanStack Query) work with Preact's smaller bundle. The aliases are configured in both `vite.config.ts` and `tsconfig.json`.
+**Static files only**: No build step required. The entire frontend is:
+- `index.html` - HTMX app with Mustache template and inline JS for data preprocessing
+- `styles.css` - Plain CSS with grid layout, status colors, dark mode
 
 **Gatus API integration**:
-- Development: Vite proxies `/api/*` to `GATUS_URL` env var (default: `localhost:8080`)
-- Production: Caddy reverse proxy handles `/api/*` routing to Gatus
-- Frontend always uses relative `/api/*` paths; proxy layer handles routing
+- Caddy reverse proxies `/api/*` to Gatus backend (configured via `GATUS_URL` env var)
+- Frontend fetches from `/api/v1/endpoints/statuses` with 30s auto-refresh
+- Response preprocessed client-side before Mustache rendering
 
-**Styling**: UnoCSS with Wind3 preset (Tailwind-compatible). In `vite.config.ts`, UnoCSS plugin must come BEFORE preact preset.
+**CDN dependencies** (loaded from unpkg.com):
+- htmx.org@2.0.4
+- mustache@4.2.0
+- htmx-ext-client-side-templates@2.0.1
+
+## Development
+
+Open `index.html` in a browser with a running Gatus instance, or use Docker:
+
+```bash
+docker compose up
+```
 
 ## Key Files
 
-- `src/lib/query-client.ts` - TanStack Query client with default options
-- `src/lib/api.ts` - API base URL utility for Gatus endpoints
-- `uno.config.ts` - UnoCSS configuration
+- `index.html` - Main app with HTMX, Mustache template, and preprocessing logic
+- `styles.css` - All styles including grid, colors, popovers, dark mode
+- `Caddyfile` - Caddy configuration for static serving and API proxy
+- `Dockerfile` - Simple static file copy to Caddy
 
-## Preact Conventions
+## Environment Variables
 
-- Use `class` not `className` in JSX (Preact uses native HTML attribute)
-- JSX configured with `jsxImportSource: "preact"` in tsconfig
+**Never commit sensitive information** including API keys, hostnames (even public ones), tokens, or credentials.
 
-## Path Aliases
-
-`@/` maps to `src/` (e.g., `import { queryClient } from '@/lib/query-client'`)
+- `GATUS_URL` - Gatus backend URL (default: `gatus:8080` in Docker)
