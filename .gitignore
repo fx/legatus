@@ -1,8 +1,12 @@
 # Dependencies
 node_modules/
 
-# Build output
-dist/
+# Build output - NOT ignored since we deploy compiled JS
+# dist/
+
+# Test results
+test-results/
+playwright-report/
 
 # TypeScript build info
 *.tsbuildinfo
