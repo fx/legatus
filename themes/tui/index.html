@@ -8,108 +8,122 @@
     <script src="/lib/htmx.min.js"></script>
     <script src="/lib/mustache.min.js"></script>
     <script src="/lib/client-side-templates.js"></script>
-    <script>
-      // Theme toggle initialization
-      (function() {
-        const stored = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = stored || (prefersDark ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', theme);
-      })();
-    </script>
   </head>
   <body>
-    <!-- Theme toggle button -->
-    <button type="button" class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
-      <span class="theme-icon-light">[L]</span>
-      <span class="theme-icon-dark">[D]</span>
-    </button>
+    <div class="terminal">
+      <header class="terminal-header">
+        <span class="terminal-title">[ GATUS STATUS MONITOR ]</span>
+      </header>
 
-    <!-- Mustache template for endpoints -->
-    <template id="endpoints-template">
-      <div class="status-grid">
-        {{#endpoints}}
-        <button
-          type="button"
-          class="status-square status-{{statusClass}}"
-          aria-label="{{name}}{{#group}} ({{group}}){{/group}}: {{statusLabel}}"
-          popovertarget="popover-{{index}}"
-        ></button>
-        <div
-          id="popover-{{index}}"
-          popover="auto"
-          class="status-popover"
-        >
-          <div class="popover-header">
-            <div>
-              <h3 class="popover-name">{{name}}</h3>
+      <!-- Mustache template for endpoints -->
+      <template id="endpoints-template">
+        <table class="status-table">
+          <thead>
+            <tr>
+              <th class="col-status">STATUS</th>
+              <th class="col-name">NAME</th>
+              <th class="col-group">GROUP</th>
+              <th class="col-response">RESPONSE</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#endpoints}}
+            <tr class="status-row">
+              <td class="col-status">
+                <button
+                  type="button"
+                  class="status-icon status-icon-{{statusClass}}"
+                  aria-label="{{name}}{{#group}} ({{group}}){{/group}}: {{statusLabel}}"
+                  popovertarget="popover-{{index}}"
+                >[{{statusIcon}}]</button>
+              </td>
+              <td class="col-name">{{name}}</td>
+              <td class="col-group">{{#group}}{{group}}{{/group}}{{^group}}--{{/group}}</td>
+              <td class="col-response">{{#formattedDuration}}{{formattedDuration}}{{/formattedDuration}}{{^formattedDuration}}--{{/formattedDuration}}</td>
+            </tr>
+            <div
+              id="popover-{{index}}"
+              popover="auto"
+              class="status-popover"
+            >
+              <div class="popover-header">
+                <span class="popover-name">{{name}}</span>
+                <span class="status-badge status-badge-{{statusClass}}">[{{statusIcon}}]</span>
+              </div>
               {{#group}}
-              <p class="popover-group">{{group}}</p>
+              <div class="popover-group">Group: {{group}}</div>
               {{/group}}
+              {{#hasResult}}
+              <div class="popover-details">
+                <div class="detail-row">
+                  <span class="detail-label">Response:</span>
+                  <span class="detail-value">{{formattedDuration}}</span>
+                </div>
+                {{#httpStatus}}
+                <div class="detail-row">
+                  <span class="detail-label">HTTP:</span>
+                  <span class="detail-value">{{httpStatus}}</span>
+                </div>
+                {{/httpStatus}}
+                <div class="detail-row">
+                  <span class="detail-label">Checked:</span>
+                  <span class="detail-value">{{formattedTimestamp}}</span>
+                </div>
+                {{#hasConditions}}
+                <div class="conditions-section">
+                  <div class="conditions-title">--- Conditions ---</div>
+                  <ul class="conditions-list">
+                    {{#conditions}}
+                    <li class="condition-item">
+                      <span class="{{iconClass}}">{{icon}}</span>
+                      <code class="condition-text">{{condition}}</code>
+                    </li>
+                    {{/conditions}}
+                  </ul>
+                </div>
+                {{/hasConditions}}
+              </div>
+              {{/hasResult}}
+              {{^hasResult}}
+              <div class="no-results">[NO DATA]</div>
+              {{/hasResult}}
             </div>
-            <span class="status-badge status-badge-{{statusClass}}">{{statusLabel}}</span>
-          </div>
-          {{#hasResult}}
-          <div class="popover-details">
-            <div class="detail-row">
-              <span class="detail-label">Response:</span>
-              <span class="detail-value">{{formattedDuration}}</span>
-            </div>
-            {{#httpStatus}}
-            <div class="detail-row">
-              <span class="detail-label">HTTP:</span>
-              <span class="detail-value">{{httpStatus}}</span>
-            </div>
-            {{/httpStatus}}
-            <div class="detail-row">
-              <span class="detail-label">Checked:</span>
-              <span class="detail-value">{{formattedTimestamp}}</span>
-            </div>
-            {{#hasConditions}}
-            <div class="conditions-section">
-              <p class="conditions-title">--- Conditions ---</p>
-              <ul class="conditions-list">
-                {{#conditions}}
-                <li class="condition-item">
-                  <span class="{{iconClass}}">{{icon}}</span>
-                  <code class="condition-text" title="{{condition}}">{{condition}}</code>
-                </li>
-                {{/conditions}}
-              </ul>
-            </div>
-            {{/hasConditions}}
-          </div>
-          {{/hasResult}}
-          {{^hasResult}}
-          <p class="no-results">[NO DATA]</p>
-          {{/hasResult}}
-        </div>
-        {{/endpoints}}
-      </div>
-    </template>
+            {{/endpoints}}
+          </tbody>
+        </table>
+      </template>
 
-    <!-- Main container with HTMX -->
-    <div
-      id="app"
-      hx-ext="client-side-templates"
-      hx-get="/api/v1/endpoints/statuses"
-      hx-trigger="load, every 30s"
-      mustache-template="endpoints-template"
-    >
-      <div class="loading-container">
-        <div class="loading-spinner"></div>
+      <!-- Main container with HTMX -->
+      <div
+        id="app"
+        hx-ext="client-side-templates"
+        hx-get="/api/v1/endpoints/statuses"
+        hx-trigger="load, every 30s"
+        mustache-template="endpoints-template"
+      >
+        <div class="loading-container">
+          <span class="loading-text">Loading...</span>
+        </div>
       </div>
+
+      <footer class="terminal-footer">
+        <span>Auto-refresh: 30s</span>
+        <span>|</span>
+        <span id="timestamp"></span>
+      </footer>
     </div>
 
     <script type="module" src="/dist/app.js"></script>
     <script>
-      function toggleTheme() {
-        const html = document.documentElement;
-        const current = html.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
+      function updateTimestamp() {
+        const el = document.getElementById('timestamp');
+        if (el) {
+          const now = new Date();
+          el.textContent = now.toLocaleTimeString();
+        }
       }
+      updateTimestamp();
+      setInterval(updateTimestamp, 1000);
     </script>
   </body>
 </html>

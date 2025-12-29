@@ -7,79 +7,24 @@
   box-sizing: border-box;
 }
 
-/* Theme variables - Terminal colors */
+/* Terminal colors - pure black background with terminal green */
 :root {
-  --bg-color: #ffffff;
-  --text-color: #000000;
-  --border-color: #555555;
-  --muted-color: #555555;
-  --popover-bg: #ffffff;
-  --code-bg: #eeeeee;
-  --focus-color: #0000ff;
-  --spinner-track: #cccccc;
-
-  /* Status colors - Terminal style */
-  --healthy: #00aa00;
-  --unhealthy: #aa0000;
-  --unknown: #555555;
-
-  /* Badge colors */
-  --badge-healthy-bg: #ccffcc;
-  --badge-healthy-text: #006600;
-  --badge-unhealthy-bg: #ffcccc;
-  --badge-unhealthy-text: #660000;
-  --badge-unknown-bg: #dddddd;
-  --badge-unknown-text: #555555;
-}
-
-[data-theme="dark"] {
   --bg-color: #000000;
-  --text-color: #ffffff;
-  --border-color: #555555;
-  --muted-color: #888888;
-  --popover-bg: #111111;
-  --code-bg: #222222;
-  --spinner-track: #333333;
+  --text-color: #00ff00;
+  --border-color: #00aa00;
+  --muted-color: #008800;
+  --popover-bg: #000000;
+  --header-color: #00ff00;
 
-  /* Status colors - Terminal dark mode */
-  --healthy: #00ff00;
-  --unhealthy: #ff0000;
-  --unknown: #555555;
-
-  /* Badge colors */
-  --badge-healthy-bg: #003300;
-  --badge-healthy-text: #00ff00;
-  --badge-unhealthy-bg: #330000;
-  --badge-unhealthy-text: #ff0000;
-  --badge-unknown-bg: #333333;
-  --badge-unknown-text: #888888;
-}
-
-/* System preference fallback when no data-theme set */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --bg-color: #000000;
-    --text-color: #ffffff;
-    --border-color: #555555;
-    --muted-color: #888888;
-    --popover-bg: #111111;
-    --code-bg: #222222;
-    --spinner-track: #333333;
-    --healthy: #00ff00;
-    --unhealthy: #ff0000;
-    --unknown: #555555;
-    --badge-healthy-bg: #003300;
-    --badge-healthy-text: #00ff00;
-    --badge-unhealthy-bg: #330000;
-    --badge-unhealthy-text: #ff0000;
-    --badge-unknown-bg: #333333;
-    --badge-unknown-text: #888888;
-  }
+  /* Status colors */
+  --status-ok: #00ff00;
+  --status-error: #ff0000;
+  --status-unknown: #666666;
 }
 
 body {
   margin: 0;
-  padding: 1rem;
+  padding: 0;
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
     'Liberation Mono', monospace;
   background-color: var(--bg-color);
@@ -89,181 +34,172 @@ body {
   line-height: 1.4;
 }
 
-/* Theme toggle button - Terminal style */
-.theme-toggle {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: 0;
-  background-color: var(--popover-bg);
-  color: var(--text-color);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: inherit;
-  font-size: 0.875rem;
-  z-index: 1000;
-}
-
-.theme-toggle:hover {
-  background-color: var(--code-bg);
-}
-
-.theme-toggle:focus {
-  outline: 1px solid var(--focus-color);
-  outline-offset: 0;
-}
-
-/* Show/hide icons based on theme */
-.theme-icon-light {
-  display: none;
-}
-
-.theme-icon-dark {
-  display: inline;
-}
-
-[data-theme="dark"] .theme-icon-light {
-  display: inline;
-}
-
-[data-theme="dark"] .theme-icon-dark {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .theme-icon-light {
-    display: inline;
-  }
-  :root:not([data-theme]) .theme-icon-dark {
-    display: none;
-  }
-}
-
-/* Status grid container - Terminal grid */
-.status-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(24px, 1fr));
-  gap: 2px;
-  max-width: 1000px;
+/* Terminal container */
+.terminal {
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0.5rem;
-  border: 1px solid var(--border-color);
+  padding: 1rem;
 }
 
-/* Status square button - Sharp terminal blocks */
-.status-square {
+/* Terminal header */
+.terminal-header {
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+.terminal-title {
+  font-weight: bold;
+  color: var(--header-color);
+  letter-spacing: 0.1em;
+}
+
+/* Status table */
+.status-table {
   width: 100%;
-  aspect-ratio: 1;
-  min-width: 20px;
-  min-height: 20px;
+  border-collapse: collapse;
   border: 1px solid var(--border-color);
-  border-radius: 0;
+}
+
+.status-table thead {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.status-table th {
+  text-align: left;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  color: var(--header-color);
+  background-color: rgba(0, 255, 0, 0.05);
+}
+
+.status-table td {
+  padding: 0.25rem 1rem;
+  border-bottom: 1px solid rgba(0, 170, 0, 0.3);
+}
+
+.status-table tbody tr:hover {
+  background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Column widths */
+.col-status {
+  width: 80px;
+}
+
+.col-name {
+  min-width: 200px;
+}
+
+.col-group {
+  min-width: 150px;
+  color: var(--muted-color);
+}
+
+.col-response {
+  width: 100px;
+  text-align: right;
+}
+
+/* Status icon button */
+.status-icon {
+  background: none;
+  border: none;
   cursor: pointer;
-  transition: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  padding: 0;
 }
 
-.status-square:hover {
-  opacity: 0.8;
-  border-color: var(--text-color);
+.status-icon:hover {
+  text-decoration: underline;
 }
 
-.status-square:focus {
-  outline: 1px solid var(--focus-color);
-  outline-offset: 0;
+.status-icon:focus {
+  outline: 1px solid var(--text-color);
+  outline-offset: 2px;
 }
 
-/* Status colors */
-.status-healthy {
-  background-color: var(--healthy);
+.status-icon-healthy {
+  color: var(--status-ok);
 }
 
-.status-unhealthy {
-  background-color: var(--unhealthy);
+.status-icon-unhealthy {
+  color: var(--status-error);
 }
 
-.status-unknown {
-  background-color: var(--unknown);
+.status-icon-unknown {
+  color: var(--status-unknown);
 }
 
 /* Popover styles - Terminal dialog */
 .status-popover {
-  padding: 0.75rem;
+  padding: 1rem;
   border-radius: 0;
-  box-shadow: 4px 4px 0 var(--border-color);
+  box-shadow: none;
   background-color: var(--popover-bg);
   color: var(--text-color);
-  border: 2px solid var(--border-color);
-  max-width: 20rem;
+  border: 1px solid var(--border-color);
+  max-width: 24rem;
   margin: 0;
   font-family: inherit;
 }
 
 .status-popover::backdrop {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.7);
 }
 
 /* Popover header */
 .popover-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px dashed var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .popover-name {
-  font-size: 0.875rem;
   font-weight: bold;
-  margin: 0;
   text-transform: uppercase;
 }
 
-.popover-group {
-  font-size: 0.75rem;
-  color: var(--muted-color);
-  margin: 0;
-}
-
-/* Status badge - Terminal style */
+/* Status badge */
 .status-badge {
-  padding: 0 0.375rem;
-  font-size: 0.75rem;
   font-weight: bold;
-  border-radius: 0;
-  white-space: nowrap;
-  border: 1px solid currentColor;
 }
 
 .status-badge-healthy {
-  background-color: var(--badge-healthy-bg);
-  color: var(--badge-healthy-text);
+  color: var(--status-ok);
 }
 
 .status-badge-unhealthy {
-  background-color: var(--badge-unhealthy-bg);
-  color: var(--badge-unhealthy-text);
+  color: var(--status-error);
 }
 
 .status-badge-unknown {
-  background-color: var(--badge-unknown-bg);
-  color: var(--badge-unknown-text);
+  color: var(--status-unknown);
+}
+
+/* Popover group */
+.popover-group {
+  color: var(--muted-color);
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
 }
 
 /* Popover details */
 .popover-details {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
 }
 
 .detail-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.125rem;
+  margin-bottom: 0.25rem;
 }
 
 .detail-label {
@@ -276,15 +212,14 @@ body {
 
 /* Conditions section */
 .conditions-section {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
   padding-top: 0.5rem;
-  border-top: 1px dashed var(--border-color);
+  border-top: 1px solid var(--border-color);
 }
 
 .conditions-title {
   color: var(--muted-color);
-  margin-bottom: 0.25rem;
-  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
   text-align: center;
 }
 
@@ -297,74 +232,74 @@ body {
 .condition-item {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  margin-bottom: 0.125rem;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .condition-icon-success {
-  color: var(--healthy);
+  color: var(--status-ok);
 }
 
 .condition-icon-failure {
-  color: var(--unhealthy);
+  color: var(--status-error);
 }
 
 .condition-text {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-family: inherit;
-  background-color: var(--code-bg);
-  padding: 0 0.25rem;
-  border-radius: 0;
+  background: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 180px;
-  border: 1px solid var(--border-color);
+  max-width: 280px;
 }
 
 /* No results message */
 .no-results {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--muted-color);
   text-align: center;
+  padding: 0.5rem;
 }
 
-/* Loading spinner - Terminal style */
+/* Loading */
 .loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 200px;
+  border: 1px solid var(--border-color);
+  border-top: none;
 }
 
-.loading-spinner {
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 2px solid var(--spinner-track);
-  border-top-color: var(--text-color);
-  border-radius: 0;
-  animation: spin 0.5s steps(4) infinite;
+.loading-text {
+  animation: blink 1s step-end infinite;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+@keyframes blink {
+  50% {
+    opacity: 0;
   }
 }
 
-/* Error message */
-.error-container {
-  text-align: center;
-  padding: 2rem;
-  color: var(--unhealthy);
+/* Terminal footer */
+.terminal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-top: none;
+  font-size: 0.75rem;
+  color: var(--muted-color);
 }
 
+/* Error message */
 .error-message {
   text-align: center;
   padding: 2rem;
-  color: var(--unhealthy);
-  font-size: 0.875rem;
-  border: 1px solid var(--unhealthy);
+  color: var(--status-error);
+  border: 1px solid var(--status-error);
 }
 
 /* HTMX loading indicator */
@@ -372,6 +307,6 @@ body {
   display: flex;
 }
 
-.htmx-request .status-grid {
+.htmx-request .status-table {
   opacity: 0.5;
 }
