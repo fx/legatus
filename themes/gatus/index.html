@@ -9,20 +9,22 @@
     <script src="/lib/mustache.min.js"></script>
     <script src="/lib/client-side-templates.js"></script>
     <script>
-      // Theme toggle initialization
+      // Color mode initialization
       (function() {
-        const stored = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = stored || (prefersDark ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', theme);
+        const stored = localStorage.getItem('color-mode') || 'system';
+        document.documentElement.setAttribute('data-mode', stored);
+        if (stored !== 'system') {
+          document.documentElement.setAttribute('data-color', stored);
+        }
       })();
     </script>
   </head>
   <body>
-    <!-- Theme toggle button -->
-    <button type="button" class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
-      <span class="theme-icon-light">&#9788;</span>
-      <span class="theme-icon-dark">&#9790;</span>
+    <!-- Color mode toggle button -->
+    <button type="button" class="mode-toggle" aria-label="Toggle color mode" onclick="toggleMode()">
+      <svg class="mode-icon mode-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="mode-icon mode-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="mode-icon mode-icon-system" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M8 21h8M12 17v4"/></svg>
     </button>
 
     <!-- Mustache template for endpoints -->
@@ -103,12 +105,20 @@
 
     <script type="module" src="/dist/app.js"></script>
     <script>
-      function toggleTheme() {
+      function toggleMode() {
         const html = document.documentElement;
-        const current = html.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
+        const current = localStorage.getItem('color-mode') || 'system';
+        // Cycle: light → dark → system → light
+        const next = current === 'light' ? 'dark' : current === 'dark' ? 'system' : 'light';
+
+        html.setAttribute('data-mode', next);
+        localStorage.setItem('color-mode', next);
+
+        if (next === 'system') {
+          html.removeAttribute('data-color');
+        } else {
+          html.setAttribute('data-color', next);
+        }
       }
     </script>
   </body>
