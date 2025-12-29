@@ -8,8 +8,23 @@
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/mustache@4.2.0/mustache.min.js" integrity="sha384-WASZCYHGuIg0bwkJEH65mhmbKS1x4/VKI2bzElPKmL5B3e0UaH45nIdqOm+BUuRA" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx-ext-client-side-templates@2.0.1/client-side-templates.js" integrity="sha384-5HS4cYYiDPe+JJZnvMgSQ6D8BKodgzgxrgv+vrvEzTK0vLTU5ou9BMiyrn+9xGaX" crossorigin="anonymous"></script>
+    <script>
+      // Theme toggle initialization
+      (function() {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </head>
   <body>
+    <!-- Theme toggle button -->
+    <button type="button" class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+      <span class="theme-icon-light">&#9788;</span>
+      <span class="theme-icon-dark">&#9790;</span>
+    </button>
+
     <!-- Mustache template for endpoints -->
     <template id="endpoints-template">
       <div class="status-grid">
@@ -87,5 +102,14 @@
     </div>
 
     <script type="module" src="/dist/app.js"></script>
+    <script>
+      function toggleTheme() {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      }
+    </script>
   </body>
 </html>

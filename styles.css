@@ -1,4 +1,4 @@
-/* Gatus Minimal Frontend - Plain CSS */
+/* Gatus Theme - Default styling */
 
 /* Reset and base styles */
 *,
@@ -7,21 +7,138 @@
   box-sizing: border-box;
 }
 
+/* Theme variables */
+:root {
+  --bg-color: #f9fafb;
+  --text-color: #111827;
+  --border-color: #e5e7eb;
+  --muted-color: #6b7280;
+  --popover-bg: #fff;
+  --code-bg: #f3f4f6;
+  --focus-color: #3b82f6;
+  --spinner-track: #e5e7eb;
+
+  /* Status colors */
+  --healthy: #22c55e;
+  --unhealthy: #ef4444;
+  --unknown: #9ca3af;
+
+  /* Badge colors */
+  --badge-healthy-bg: #dcfce7;
+  --badge-healthy-text: #15803d;
+  --badge-unhealthy-bg: #fee2e2;
+  --badge-unhealthy-text: #b91c1c;
+  --badge-unknown-bg: #e5e7eb;
+  --badge-unknown-text: #4b5563;
+}
+
+[data-theme="dark"] {
+  --bg-color: #111827;
+  --text-color: #f9fafb;
+  --border-color: #374151;
+  --muted-color: #9ca3af;
+  --popover-bg: #1f2937;
+  --code-bg: #374151;
+  --spinner-track: #374151;
+
+  /* Status colors */
+  --healthy: #16a34a;
+  --unhealthy: #dc2626;
+  --unknown: #4b5563;
+
+  /* Badge colors */
+  --badge-healthy-bg: rgba(22, 163, 74, 0.3);
+  --badge-healthy-text: #4ade80;
+  --badge-unhealthy-bg: rgba(220, 38, 38, 0.3);
+  --badge-unhealthy-text: #f87171;
+  --badge-unknown-bg: #374151;
+  --badge-unknown-text: #9ca3af;
+}
+
+/* System preference fallback when no data-theme set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg-color: #111827;
+    --text-color: #f9fafb;
+    --border-color: #374151;
+    --muted-color: #9ca3af;
+    --popover-bg: #1f2937;
+    --code-bg: #374151;
+    --spinner-track: #374151;
+    --healthy: #16a34a;
+    --unhealthy: #dc2626;
+    --unknown: #4b5563;
+    --badge-healthy-bg: rgba(22, 163, 74, 0.3);
+    --badge-healthy-text: #4ade80;
+    --badge-unhealthy-bg: rgba(220, 38, 38, 0.3);
+    --badge-unhealthy-text: #f87171;
+    --badge-unknown-bg: #374151;
+    --badge-unknown-text: #9ca3af;
+  }
+}
+
 body {
   margin: 0;
   padding: 1rem;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
-  background-color: #f9fafb;
-  color: #111827;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   min-height: 100vh;
 }
 
-/* Dark mode */
+/* Theme toggle button */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--popover-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  z-index: 1000;
+  transition: background-color 0.15s ease;
+}
+
+.theme-toggle:hover {
+  background-color: var(--code-bg);
+}
+
+.theme-toggle:focus {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
+}
+
+/* Show/hide icons based on theme */
+.theme-icon-light {
+  display: none;
+}
+
+.theme-icon-dark {
+  display: inline;
+}
+
+[data-theme="dark"] .theme-icon-light {
+  display: inline;
+}
+
+[data-theme="dark"] .theme-icon-dark {
+  display: none;
+}
+
 @media (prefers-color-scheme: dark) {
-  body {
-    background-color: #111827;
-    color: #f9fafb;
+  :root:not([data-theme]) .theme-icon-light {
+    display: inline;
+  }
+  :root:not([data-theme]) .theme-icon-dark {
+    display: none;
   }
 }
 
@@ -51,41 +168,21 @@ body {
 }
 
 .status-square:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--focus-color);
   outline-offset: 2px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .status-square:focus {
-    outline-offset: 2px;
-  }
 }
 
 /* Status colors */
 .status-healthy {
-  background-color: #22c55e;
+  background-color: var(--healthy);
 }
 
 .status-unhealthy {
-  background-color: #ef4444;
+  background-color: var(--unhealthy);
 }
 
 .status-unknown {
-  background-color: #9ca3af;
-}
-
-@media (prefers-color-scheme: dark) {
-  .status-healthy {
-    background-color: #16a34a;
-  }
-
-  .status-unhealthy {
-    background-color: #dc2626;
-  }
-
-  .status-unknown {
-    background-color: #4b5563;
-  }
+  background-color: var(--unknown);
 }
 
 /* Popover styles */
@@ -93,23 +190,15 @@ body {
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  background-color: #fff;
-  color: #111827;
-  border: 1px solid #e5e7eb;
+  background-color: var(--popover-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   max-width: 20rem;
   margin: 0;
 }
 
 .status-popover::backdrop {
   background: transparent;
-}
-
-@media (prefers-color-scheme: dark) {
-  .status-popover {
-    background-color: #1f2937;
-    color: #f9fafb;
-    border-color: #374151;
-  }
 }
 
 /* Popover header */
@@ -129,14 +218,8 @@ body {
 
 .popover-group {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--muted-color);
   margin: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  .popover-group {
-    color: #9ca3af;
-  }
 }
 
 /* Status badge */
@@ -148,48 +231,25 @@ body {
 }
 
 .status-badge-healthy {
-  background-color: #dcfce7;
-  color: #15803d;
+  background-color: var(--badge-healthy-bg);
+  color: var(--badge-healthy-text);
 }
 
 .status-badge-unhealthy {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: var(--badge-unhealthy-bg);
+  color: var(--badge-unhealthy-text);
 }
 
 .status-badge-unknown {
-  background-color: #e5e7eb;
-  color: #4b5563;
-}
-
-@media (prefers-color-scheme: dark) {
-  .status-badge-healthy {
-    background-color: rgba(22, 163, 74, 0.3);
-    color: #4ade80;
-  }
-
-  .status-badge-unhealthy {
-    background-color: rgba(220, 38, 38, 0.3);
-    color: #f87171;
-  }
-
-  .status-badge-unknown {
-    background-color: #374151;
-    color: #9ca3af;
-  }
+  background-color: var(--badge-unknown-bg);
+  color: var(--badge-unknown-text);
 }
 
 /* Popover details */
 .popover-details {
   font-size: 0.75rem;
   padding-top: 0.5rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-@media (prefers-color-scheme: dark) {
-  .popover-details {
-    border-top-color: #374151;
-  }
+  border-top: 1px solid var(--border-color);
 }
 
 .detail-row {
@@ -199,13 +259,7 @@ body {
 }
 
 .detail-label {
-  color: #6b7280;
-}
-
-@media (prefers-color-scheme: dark) {
-  .detail-label {
-    color: #9ca3af;
-  }
+  color: var(--muted-color);
 }
 
 .detail-value {
@@ -217,24 +271,12 @@ body {
 .conditions-section {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-@media (prefers-color-scheme: dark) {
-  .conditions-section {
-    border-top-color: #374151;
-  }
+  border-top: 1px solid var(--border-color);
 }
 
 .conditions-title {
-  color: #6b7280;
+  color: var(--muted-color);
   margin-bottom: 0.25rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .conditions-title {
-    color: #9ca3af;
-  }
 }
 
 .conditions-list {
@@ -262,7 +304,7 @@ body {
   font-size: 0.75rem;
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
     monospace;
-  background-color: #f3f4f6;
+  background-color: var(--code-bg);
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   overflow: hidden;
@@ -271,23 +313,11 @@ body {
   max-width: 200px;
 }
 
-@media (prefers-color-scheme: dark) {
-  .condition-text {
-    background-color: #374151;
-  }
-}
-
 /* No results message */
 .no-results {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--muted-color);
   font-style: italic;
-}
-
-@media (prefers-color-scheme: dark) {
-  .no-results {
-    color: #9ca3af;
-  }
 }
 
 /* Loading spinner */
@@ -301,17 +331,10 @@ body {
 .loading-spinner {
   width: 2.5rem;
   height: 2.5rem;
-  border: 3px solid #e5e7eb;
-  border-top-color: #3b82f6;
+  border: 3px solid var(--spinner-track);
+  border-top-color: var(--focus-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-}
-
-@media (prefers-color-scheme: dark) {
-  .loading-spinner {
-    border-color: #374151;
-    border-top-color: #3b82f6;
-  }
 }
 
 @keyframes spin {
@@ -330,14 +353,8 @@ body {
 .error-message {
   text-align: center;
   padding: 2rem;
-  color: #ef4444;
+  color: var(--unhealthy);
   font-size: 0.875rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .error-message {
-    color: #f87171;
-  }
 }
 
 /* HTMX loading indicator */
