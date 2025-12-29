@@ -14,7 +14,7 @@ fi
 
 # Start Gatus in the background
 echo "Starting Gatus..."
-/usr/local/bin/gatus &
+GATUS_CONFIG_PATH=/config/config.yaml /usr/local/bin/gatus &
 
 # Start Caddy in the foreground
 echo "Starting Caddy..."

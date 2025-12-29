@@ -1,5 +1,5 @@
 # Stage 1: Build Gatus from vendored source
-FROM golang:1.23-alpine AS gatus-builder
+FROM golang:1.24-alpine AS gatus-builder
 
 WORKDIR /build
 COPY vendor/gatus .
