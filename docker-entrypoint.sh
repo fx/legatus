@@ -12,9 +12,12 @@ if [ -n "$THEME" ]; then
   fi
 fi
 
+# Default config path if not set by user
+export GATUS_CONFIG_PATH="${GATUS_CONFIG_PATH:-/config/config.yaml}"
+
 # Start Gatus in the background
 echo "Starting Gatus..."
-GATUS_CONFIG_PATH=/config/config.yaml /usr/local/bin/gatus &
+/usr/local/bin/gatus &
 
 # Start Caddy in the foreground
 echo "Starting Caddy..."
