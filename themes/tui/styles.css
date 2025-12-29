@@ -1,312 +1,290 @@
-/* TUI Theme - Terminal UI style */
+/* TUI Theme - WebTUI Customizations */
 
-/* Reset and base styles */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* Custom theme colors using WebTUI variables */
+@layer base {
+  :root {
+    /* Override WebTUI dark theme with terminal green aesthetic */
+    --background0: #000000;
+    --background1: #0a0a0a;
+    --background2: #111111;
+    --background3: #1a1a1a;
 
-/* Terminal colors - pure black background with terminal green */
-:root {
-  --bg-color: #000000;
-  --text-color: #00ff00;
-  --border-color: #00aa00;
-  --muted-color: #008800;
-  --popover-bg: #000000;
-  --header-color: #00ff00;
+    --foreground0: #00ff00;
+    --foreground1: #00cc00;
+    --foreground2: #008800;
 
-  /* Status colors */
-  --status-ok: #00ff00;
-  --status-error: #ff0000;
-  --status-unknown: #666666;
-}
+    /* Border colors for box utility */
+    --box-border-color: #00aa00;
+    --table-border-color: #00aa00;
+    --separator-color: #00aa00;
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
-    'Liberation Mono', monospace;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  min-height: 100vh;
-  font-size: 14px;
-  line-height: 1.4;
-}
+    /* Status colors */
+    --status-ok: #00ff00;
+    --status-error: #ff0000;
+    --status-unknown: #666666;
 
-/* Terminal container */
-.terminal {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-/* Terminal header */
-.terminal-header {
-  border: 1px solid var(--border-color);
-  border-bottom: none;
-  padding: 0.5rem 1rem;
-  text-align: center;
-}
-
-.terminal-title {
-  font-weight: bold;
-  color: var(--header-color);
-  letter-spacing: 0.1em;
-}
-
-/* Status table */
-.status-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid var(--border-color);
-}
-
-.status-table thead {
-  border-bottom: 1px solid var(--border-color);
-}
-
-.status-table th {
-  text-align: left;
-  padding: 0.5rem 1rem;
-  font-weight: bold;
-  color: var(--header-color);
-  background-color: rgba(0, 255, 0, 0.05);
-}
-
-.status-table td {
-  padding: 0.25rem 1rem;
-  border-bottom: 1px solid rgba(0, 170, 0, 0.3);
-}
-
-.status-table tbody tr:hover {
-  background-color: rgba(0, 255, 0, 0.1);
-}
-
-/* Column widths */
-.col-status {
-  width: 80px;
-}
-
-.col-name {
-  min-width: 200px;
-}
-
-.col-group {
-  min-width: 150px;
-  color: var(--muted-color);
-}
-
-.col-response {
-  width: 100px;
-  text-align: right;
-}
-
-/* Status icon button */
-.status-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: bold;
-  padding: 0;
-}
-
-.status-icon:hover {
-  text-decoration: underline;
-}
-
-.status-icon:focus {
-  outline: 1px solid var(--text-color);
-  outline-offset: 2px;
-}
-
-.status-icon-healthy {
-  color: var(--status-ok);
-}
-
-.status-icon-unhealthy {
-  color: var(--status-error);
-}
-
-.status-icon-unknown {
-  color: var(--status-unknown);
-}
-
-/* Popover styles - Terminal dialog */
-.status-popover {
-  padding: 1rem;
-  border-radius: 0;
-  box-shadow: none;
-  background-color: var(--popover-bg);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  max-width: 24rem;
-  margin: 0;
-  font-family: inherit;
-}
-
-.status-popover::backdrop {
-  background: rgba(0, 0, 0, 0.7);
-}
-
-/* Popover header */
-.popover-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.popover-name {
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-/* Status badge */
-.status-badge {
-  font-weight: bold;
-}
-
-.status-badge-healthy {
-  color: var(--status-ok);
-}
-
-.status-badge-unhealthy {
-  color: var(--status-error);
-}
-
-.status-badge-unknown {
-  color: var(--status-unknown);
-}
-
-/* Popover group */
-.popover-group {
-  color: var(--muted-color);
-  margin-bottom: 0.75rem;
-  font-size: 0.875rem;
-}
-
-/* Popover details */
-.popover-details {
-  font-size: 0.875rem;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.25rem;
-}
-
-.detail-label {
-  color: var(--muted-color);
-}
-
-.detail-value {
-  font-family: inherit;
-}
-
-/* Conditions section */
-.conditions-section {
-  margin-top: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--border-color);
-}
-
-.conditions-title {
-  color: var(--muted-color);
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-.conditions-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.condition-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
-}
-
-.condition-icon-success {
-  color: var(--status-ok);
-}
-
-.condition-icon-failure {
-  color: var(--status-error);
-}
-
-.condition-text {
-  font-size: 0.75rem;
-  font-family: inherit;
-  background: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 280px;
-}
-
-/* No results message */
-.no-results {
-  font-size: 0.875rem;
-  color: var(--muted-color);
-  text-align: center;
-  padding: 0.5rem;
-}
-
-/* Loading */
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  border: 1px solid var(--border-color);
-  border-top: none;
-}
-
-.loading-text {
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
+    /* Badge colors for status */
+    --badge-healthy: #00ff00;
+    --badge-unhealthy: #ff0000;
+    --badge-unknown: #666666;
   }
 }
 
-/* Terminal footer */
-.terminal-footer {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border-color);
-  border-top: none;
-  font-size: 0.75rem;
-  color: var(--muted-color);
-}
+/* Layout customizations */
+@layer components {
+  body {
+    background-color: var(--background0);
+    color: var(--foreground0);
+    min-height: 100vh;
+  }
 
-/* Error message */
-.error-message {
-  text-align: center;
-  padding: 2rem;
-  color: var(--status-error);
-  border: 1px solid var(--status-error);
-}
+  .terminal-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
 
-/* HTMX loading indicator */
-.htmx-request .loading-container {
-  display: flex;
-}
+  /* Header styling */
+  .terminal-header {
+    text-align: center;
+    margin-bottom: 0;
+    border-bottom: none;
+  }
 
-.htmx-request .status-table {
-  opacity: 0.5;
+  .terminal-header h1 {
+    margin: 0;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    color: var(--foreground0);
+  }
+
+  /* Main content area */
+  .main-content {
+    border-top: none;
+    border-bottom: none;
+    min-height: 200px;
+  }
+
+  /* Footer styling */
+  .terminal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    border-top: none;
+    font-size: 0.75rem;
+  }
+
+  /* Table customizations */
+  table {
+    width: 100%;
+    border: none;
+  }
+
+  table th {
+    color: var(--foreground0);
+    background-color: rgba(0, 255, 0, 0.05);
+  }
+
+  table tbody tr:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+  }
+
+  /* Column widths */
+  .col-status {
+    width: 80px;
+  }
+
+  .col-name {
+    min-width: 200px;
+  }
+
+  .col-group {
+    min-width: 150px;
+  }
+
+  .col-response {
+    width: 100px;
+    text-align: right;
+  }
+
+  /* Muted text helper */
+  .muted {
+    color: var(--foreground2);
+  }
+
+  /* Status button styling */
+  .status-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: bold;
+    padding: 0;
+    color: inherit;
+  }
+
+  .status-btn:hover {
+    text-decoration: underline;
+  }
+
+  .status-btn:focus {
+    outline: 1px solid var(--foreground0);
+    outline-offset: 2px;
+  }
+
+  .status-healthy {
+    color: var(--status-ok);
+  }
+
+  .status-unhealthy {
+    color: var(--status-error);
+  }
+
+  .status-unknown {
+    color: var(--status-unknown);
+  }
+
+  /* Badge status variants */
+  .status-badge-healthy {
+    --badge-color: transparent;
+    --badge-text: var(--status-ok);
+  }
+
+  .status-badge-unhealthy {
+    --badge-color: transparent;
+    --badge-text: var(--status-error);
+  }
+
+  .status-badge-unknown {
+    --badge-color: transparent;
+    --badge-text: var(--status-unknown);
+  }
+
+  /* Popover styling */
+  .status-popover {
+    padding: 1rem;
+    background-color: var(--background0);
+    color: var(--foreground0);
+    max-width: 24rem;
+    margin: 0;
+  }
+
+  .status-popover::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  /* Popover header */
+  .popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .popover-name {
+    text-transform: uppercase;
+  }
+
+  /* Popover group */
+  .popover-group {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Popover details */
+  .popover-details {
+    font-size: 0.875rem;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Conditions section */
+  .conditions-section {
+    margin-top: 0.5rem;
+  }
+
+  .conditions-title {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .conditions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .condition-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .condition-icon-success {
+    color: var(--status-ok);
+  }
+
+  .condition-icon-failure {
+    color: var(--status-error);
+  }
+
+  .condition-item code {
+    font-size: 0.75rem;
+    background: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 280px;
+  }
+
+  /* No results message */
+  .no-results {
+    font-size: 0.875rem;
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  /* Loading state */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    min-height: 200px;
+  }
+
+  .loading-text {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* HTMX loading indicator */
+  .htmx-request .loading-container {
+    display: flex;
+  }
+
+  .htmx-request table {
+    opacity: 0.5;
+  }
+
+  /* Separator customization */
+  hr[is-~='separator'] {
+    margin: 0.5rem 0;
+  }
 }
