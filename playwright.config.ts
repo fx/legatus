@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
   },
 
@@ -20,8 +20,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'bunx serve -l 3000 -s .',
-    url: 'http://localhost:3000',
+    command: 'bun run dev',
+    url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
+    timeout: 30000,
   },
 });

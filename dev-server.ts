@@ -86,10 +86,15 @@ const server = Bun.serve({
     if (await file.exists()) {
       const ext = filePath.substring(filePath.lastIndexOf("."));
 
-      // Inject hot reload script into HTML
+      // Inject hot reload script and fix CSS path for themes
       if (ext === ".html") {
         let html = await file.text();
         html = html.replace("</head>", HOT_RELOAD_SCRIPT);
+        // Rewrite CSS href to include theme parameter so subsequent request uses correct theme
+        html = html.replace(
+          'href="/styles.css"',
+          `href="/styles.css?theme=${theme}"`
+        );
         return new Response(html, {
           headers: { "Content-Type": "text/html" },
         });
