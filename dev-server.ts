@@ -2,10 +2,12 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 import { watch, readdirSync } from "fs";
+import { generateMockData } from "./mock-data";
 
 const GATUS_URL = process.env.GATUS_URL || "http://localhost:8080";
 const PORT = 5173;
 const DEFAULT_THEME = "gatus";
+const MOCK_MODE = process.env.MOCK === "true" || process.argv.includes("--mock");
 
 const MIME_TYPES: Record<string, string> = {
   ".html": "text/html",
@@ -45,8 +47,17 @@ const server = Bun.serve({
       return new Response("WebSocket upgrade failed", { status: 500 });
     }
 
-    // Proxy API requests to Gatus
+    // API requests: mock mode or proxy to Gatus
     if (path.startsWith("/api/")) {
+      // Mock mode: return generated data for the status endpoint
+      if (MOCK_MODE && path === "/api/v1/endpoints/statuses") {
+        const mockData = generateMockData();
+        return new Response(JSON.stringify(mockData), {
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      // Proxy to real Gatus
       const target = new URL(`${path}${url.search}`, GATUS_URL);
       const headers = new Headers(req.headers);
       headers.set("Host", target.host);
@@ -134,7 +145,11 @@ for (const dir of watchPaths) {
 }
 
 console.log(`Dev server running at http://localhost:${PORT}`);
-console.log(`Proxying /api/* to ${GATUS_URL}`);
+if (MOCK_MODE) {
+  console.log("Mock mode enabled - serving generated test data");
+} else {
+  console.log(`Proxying /api/* to ${GATUS_URL}`);
+}
 console.log(`Available themes: ${themes.join(", ")}`);
 console.log(`Usage: http://localhost:${PORT}?theme=<name>`);
 console.log("Hot reload enabled");
