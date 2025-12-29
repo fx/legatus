@@ -33,6 +33,9 @@ COPY --from=frontend-builder /app/themes /themes
 # Copy compiled JS (shared across all themes)
 COPY --from=frontend-builder /app/dist /srv/dist
 
+# Copy vendored JS libraries (htmx, mustache)
+COPY --from=frontend-builder /app/lib /srv/lib
+
 # Copy default theme files to /srv (can be overridden at runtime)
 COPY --from=frontend-builder /app/themes/${THEME}/index.html /srv/
 COPY --from=frontend-builder /app/themes/${THEME}/styles.css /srv/
