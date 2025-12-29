@@ -29,14 +29,34 @@
 
     <!-- Mustache template for endpoints -->
     <template id="endpoints-template">
-      <div class="status-grid">
+      <div class="card-grid">
         {{#endpoints}}
-        <button
-          type="button"
-          class="status-square status-{{statusClass}}"
-          aria-label="{{name}}{{#group}} ({{group}}){{/group}}: {{statusLabel}}"
-          popovertarget="popover-{{index}}"
-        ></button>
+        <article class="endpoint-card">
+          <header class="card-header">
+            <div class="card-title-section">
+              <h3 class="card-name">{{name}}</h3>
+              {{#group}}
+              <p class="card-group">{{group}}</p>
+              {{/group}}
+            </div>
+            <button
+              type="button"
+              class="status-badge status-badge-{{statusClass}}"
+              aria-label="{{name}}: {{statusLabel}}. Click for details."
+              popovertarget="popover-{{index}}"
+            >{{statusLabel}}</button>
+          </header>
+          <div class="card-content">
+            <div class="card-stats">
+              <span class="stat-label">Response:</span>
+              <span class="stat-value">{{#formattedDuration}}{{formattedDuration}}{{/formattedDuration}}{{^formattedDuration}}N/A{{/formattedDuration}}</span>
+            </div>
+            <div class="card-stats">
+              <span class="stat-label">Last check:</span>
+              <span class="stat-value">{{#formattedTimestamp}}{{formattedTimestamp}}{{/formattedTimestamp}}{{^formattedTimestamp}}N/A{{/formattedTimestamp}}</span>
+            </div>
+          </div>
+        </article>
         <div
           id="popover-{{index}}"
           popover="auto"
@@ -108,7 +128,7 @@
       function toggleMode() {
         const html = document.documentElement;
         const current = localStorage.getItem('color-mode') || 'system';
-        // Cycle: light → dark → system → light
+        // Cycle: light -> dark -> system -> light
         const next = current === 'light' ? 'dark' : current === 'dark' ? 'system' : 'light';
 
         html.setAttribute('data-mode', next);
