@@ -42,6 +42,7 @@ export interface ProcessedEndpoint {
   key: string;
   statusClass: 'healthy' | 'unhealthy' | 'unknown';
   statusLabel: 'Healthy' | 'Unhealthy' | 'Unknown';
+  statusIcon: 'OK' | '!!' | '--';
   hasResult: boolean;
   formattedDuration?: string;
   formattedTimestamp?: string;

@@ -63,14 +63,17 @@ export function preprocessEndpoint(endpoint: EndpointStatus, index: number): Pro
   const latestResult = endpoint.results?.[0];
   let statusClass: 'healthy' | 'unhealthy' | 'unknown' = 'unknown';
   let statusLabel: 'Healthy' | 'Unhealthy' | 'Unknown' = 'Unknown';
+  let statusIcon: 'OK' | '!!' | '--' = '--';
 
   if (latestResult) {
     if (latestResult.success) {
       statusClass = 'healthy';
       statusLabel = 'Healthy';
+      statusIcon = 'OK';
     } else {
       statusClass = 'unhealthy';
       statusLabel = 'Unhealthy';
+      statusIcon = '!!';
     }
   }
 
@@ -81,6 +84,7 @@ export function preprocessEndpoint(endpoint: EndpointStatus, index: number): Pro
     key: endpoint.key,
     statusClass,
     statusLabel,
+    statusIcon,
     hasResult: !!latestResult,
   };
 
