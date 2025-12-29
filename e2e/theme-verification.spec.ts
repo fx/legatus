@@ -46,7 +46,7 @@ test.describe('Theme Verification', () => {
 
       // Check font-family includes monospace
       const body = page.locator('body');
-      const fontFamily = await body.evaluate(el => getComputedStyle(el).fontFamily);
+      const fontFamily = await body.evaluate((el) => getComputedStyle(el).fontFamily);
       expect(fontFamily).toMatch(/monospace|mono|courier/i);
     });
 
@@ -55,8 +55,10 @@ test.describe('Theme Verification', () => {
       await page.waitForSelector('.status-table', { timeout: 10000 });
 
       // Find and click mode toggle
-      const toggle = page.locator('.mode-toggle, [aria-label*="mode"], button[class*="theme"], button[class*="mode"]');
-      if (await toggle.count() > 0) {
+      const toggle = page.locator(
+        '.mode-toggle, [aria-label*="mode"], button[class*="theme"], button[class*="mode"]',
+      );
+      if ((await toggle.count()) > 0) {
         await toggle.first().click();
         await page.waitForTimeout(500); // Wait for transition
         await page.screenshot({ path: 'screenshots/theme-tui-dark.png', fullPage: true });
@@ -101,8 +103,10 @@ test.describe('Theme Verification', () => {
       await page.goto('/?theme=gatus');
       await page.waitForSelector('.endpoint-card, .card, .gatus-card', { timeout: 10000 });
 
-      const toggle = page.locator('.mode-toggle, [aria-label*="mode"], button[class*="theme"], button[class*="mode"]');
-      if (await toggle.count() > 0) {
+      const toggle = page.locator(
+        '.mode-toggle, [aria-label*="mode"], button[class*="theme"], button[class*="mode"]',
+      );
+      if ((await toggle.count()) > 0) {
         await toggle.first().click();
         await page.waitForTimeout(500);
         await page.screenshot({ path: 'screenshots/theme-gatus-dark.png', fullPage: true });
@@ -115,7 +119,9 @@ test.describe('Theme Verification', () => {
       await page.goto('/?theme=github');
 
       // Wait for grid to load
-      await page.waitForSelector('.contribution-grid, .github-grid, .status-grid', { timeout: 10000 });
+      await page.waitForSelector('.contribution-grid, .github-grid, .status-grid', {
+        timeout: 10000,
+      });
 
       // Should have grid container
       const grid = page.locator('.contribution-grid, .github-grid, .status-grid');
@@ -127,17 +133,17 @@ test.describe('Theme Verification', () => {
 
       // Check square size is small (around 10px)
       const firstSquare = squares.first();
-      const size = await firstSquare.evaluate(el => {
+      const size = await firstSquare.evaluate((el) => {
         const computed = getComputedStyle(el);
         return {
           width: computed.width,
-          height: computed.height
+          height: computed.height,
         };
       });
 
       // Parse pixel values (e.g., "10px" -> 10)
-      const width = parseInt(size.width);
-      const height = parseInt(size.height);
+      const width = Number.parseInt(size.width);
+      const height = Number.parseInt(size.height);
 
       // Squares should be small (between 8-15px range is acceptable)
       expect(width).toBeGreaterThanOrEqual(8);
@@ -151,13 +157,17 @@ test.describe('Theme Verification', () => {
 
     test('uses green color for healthy status', async ({ page }) => {
       await page.goto('/?theme=github');
-      await page.waitForSelector('.contribution-grid, .github-grid, .status-grid', { timeout: 10000 });
+      await page.waitForSelector('.contribution-grid, .github-grid, .status-grid', {
+        timeout: 10000,
+      });
 
       // Find a healthy square
-      const healthySquare = page.locator('.status-healthy, .contribution-square[data-status="healthy"]').first();
+      const healthySquare = page
+        .locator('.status-healthy, .contribution-square[data-status="healthy"]')
+        .first();
 
-      if (await healthySquare.count() > 0) {
-        const bgColor = await healthySquare.evaluate(el => getComputedStyle(el).backgroundColor);
+      if ((await healthySquare.count()) > 0) {
+        const bgColor = await healthySquare.evaluate((el) => getComputedStyle(el).backgroundColor);
         // Should have green color (rgb values with green component dominant)
         expect(bgColor).toMatch(/rgb.*\d+.*\d+.*\d+/);
       }
@@ -165,10 +175,14 @@ test.describe('Theme Verification', () => {
 
     test('supports dark mode toggle', async ({ page }) => {
       await page.goto('/?theme=github');
-      await page.waitForSelector('.contribution-grid, .github-grid, .status-grid', { timeout: 10000 });
+      await page.waitForSelector('.contribution-grid, .github-grid, .status-grid', {
+        timeout: 10000,
+      });
 
-      const toggle = page.locator('.mode-toggle, [aria-label*="mode"], button[class*="theme"], button[class*="mode"]');
-      if (await toggle.count() > 0) {
+      const toggle = page.locator(
+        '.mode-toggle, [aria-label*="mode"], button[class*="theme"], button[class*="mode"]',
+      );
+      if ((await toggle.count()) > 0) {
         await toggle.first().click();
         await page.waitForTimeout(500);
         await page.screenshot({ path: 'screenshots/theme-github-dark.png', fullPage: true });
@@ -182,13 +196,13 @@ test.describe('Theme Verification', () => {
     for (const theme of themes) {
       const errors: string[] = [];
 
-      page.on('console', msg => {
+      page.on('console', (msg) => {
         if (msg.type() === 'error') {
           errors.push(msg.text());
         }
       });
 
-      page.on('pageerror', err => {
+      page.on('pageerror', (err) => {
         errors.push(err.message);
       });
 

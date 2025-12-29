@@ -31,8 +31,10 @@ test.describe('Theme Screenshots', () => {
     await page.waitForSelector('.status-table tbody tr', { timeout: 10000 });
 
     // Try to find and click theme toggle (TUI theme doesn't have one, but attempt anyway)
-    const toggle = page.locator('.mode-toggle, .theme-toggle, button[aria-label*="mode"], button[aria-label*="theme"]');
-    if (await toggle.count() > 0) {
+    const toggle = page.locator(
+      '.mode-toggle, .theme-toggle, button[aria-label*="mode"], button[aria-label*="theme"]',
+    );
+    if ((await toggle.count()) > 0) {
       await toggle.first().click();
       await page.waitForTimeout(500);
     }
@@ -53,7 +55,7 @@ test.describe('Theme Screenshots', () => {
     await page.waitForSelector('.endpoint-card', { timeout: 10000 });
 
     const toggle = page.locator('.mode-toggle');
-    if (await toggle.count() > 0) {
+    if ((await toggle.count()) > 0) {
       await toggle.first().click();
       await page.waitForTimeout(500);
     }
@@ -74,7 +76,7 @@ test.describe('Theme Screenshots', () => {
     await page.waitForSelector('.status-square', { timeout: 10000 });
 
     const toggle = page.locator('.theme-toggle');
-    if (await toggle.count() > 0) {
+    if ((await toggle.count()) > 0) {
       await toggle.first().click();
       await page.waitForTimeout(500);
     }

@@ -17,14 +17,14 @@ test.describe('Debug Theme Issues', () => {
     const consoleLogs: string[] = [];
     const errors: string[] = [];
 
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       consoleLogs.push(`[${msg.type()}] ${msg.text()}`);
       if (msg.type() === 'error') {
         errors.push(msg.text());
       }
     });
 
-    page.on('pageerror', err => {
+    page.on('pageerror', (err) => {
       errors.push(`PAGE ERROR: ${err.message}`);
     });
 
@@ -58,14 +58,14 @@ test.describe('Debug Theme Issues', () => {
     const consoleLogs: string[] = [];
     const errors: string[] = [];
 
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       consoleLogs.push(`[${msg.type()}] ${msg.text()}`);
       if (msg.type() === 'error') {
         errors.push(msg.text());
       }
     });
 
-    page.on('pageerror', err => {
+    page.on('pageerror', (err) => {
       errors.push(`PAGE ERROR: ${err.message}`);
     });
 
@@ -79,7 +79,7 @@ test.describe('Debug Theme Issues', () => {
     // Check square styles
     if (squareCount > 0) {
       const firstSquare = page.locator('.status-square').first();
-      const styles = await firstSquare.evaluate(el => {
+      const styles = await firstSquare.evaluate((el) => {
         const computed = getComputedStyle(el);
         return {
           width: computed.width,
@@ -87,7 +87,7 @@ test.describe('Debug Theme Issues', () => {
           backgroundColor: computed.backgroundColor,
           border: computed.border,
           display: computed.display,
-          className: el.className
+          className: el.className,
         };
       });
       console.log('GitHub: First square styles:', JSON.stringify(styles, null, 2));
