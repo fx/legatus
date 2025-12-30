@@ -1,71 +1,15 @@
 import { expect, test } from '@playwright/test';
 import endpointFixtures from './fixtures/endpoints.json' with { type: 'json' };
 
-// Helper to preprocess endpoints for the mock (mimics src/app.ts preprocessEndpoints)
-function preprocessEndpoints(
-  endpoints: Array<{
-    name: string;
-    group?: string;
-    key: string;
-    results?: Array<{
-      status?: number;
-      success?: boolean;
-      duration?: number;
-      timestamp?: string;
-      conditionResults?: Array<{ condition: string; success: boolean }>;
-    }>;
-  }>,
-) {
-  return {
-    endpoints: endpoints.map((ep, i) => {
-      const result = ep.results?.[0];
-      let statusClass: string;
-      let statusLabel: string;
-
-      if (!result) {
-        statusClass = 'unknown';
-        statusLabel = 'Unknown';
-      } else if (result.success) {
-        statusClass = 'healthy';
-        statusLabel = 'Healthy';
-      } else {
-        statusClass = 'unhealthy';
-        statusLabel = 'Unhealthy';
-      }
-
-      return {
-        index: i,
-        name: ep.name,
-        group: ep.group || null,
-        key: ep.key,
-        statusClass,
-        statusLabel,
-        hasResult: !!result,
-        formattedDuration: result
-          ? `${Math.round((result.duration || 0) / 1_000_000)}ms`
-          : undefined,
-        formattedTimestamp: 'just now',
-        httpStatus: result?.status || null,
-        hasConditions: (result?.conditionResults?.length || 0) > 0,
-        conditions: result?.conditionResults?.map((cr) => ({
-          condition: cr.condition,
-          icon: cr.success ? '\u2713' : '\u2717',
-          iconClass: cr.success ? 'condition-icon-success' : 'condition-icon-failure',
-        })),
-      };
-    }),
-  };
-}
-
 test.describe('Status Grid', () => {
   test.beforeEach(async ({ page }) => {
-    // Mock the Gatus API endpoint with preprocessed data
-    // (This simulates what our app.js does in htmx:beforeSwap)
+    // Mock the Gatus API endpoint with raw fixture data
+    // (app.js will preprocess this in htmx:beforeSwap)
     await page.route('**/api/v1/endpoints/statuses', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(preprocessEndpoints(endpointFixtures)),
+        body: JSON.stringify(endpointFixtures),
       });
     });
   });

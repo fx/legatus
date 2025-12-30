@@ -1,0 +1,51 @@
+/* TUI Theme - minimal overrides, let WebTUI handle styling */
+
+/* Status header for badge positioning */
+.status-header {
+  padding: 0 1ch;
+}
+
+.status-header [is-="badge"]::before,
+.status-header [is-="badge"]::after {
+  background: transparent;
+}
+
+/* Make separator full width */
+[is-="separator"] {
+  width: 100%;
+}
+
+/* Status background colors - DOS ANSI 16-color palette */
+.status-bg-healthy {
+  background: #00aa00;
+}
+
+.status-bg-unhealthy {
+  background: #aa0000;
+}
+
+.status-bg-unknown {
+  background: #555555;
+}
+
+/* Status text colors - DOS ANSI 16-color palette (bright) */
+.status-healthy {
+  color: #55ff55;
+}
+
+.status-unhealthy {
+  color: #ff5555;
+}
+
+.status-unknown {
+  color: #aaaaaa;
+}
+
+/* Condition result colors - DOS ANSI 16-color palette (bright) */
+.condition-icon-success {
+  color: #55ff55;
+}
+
+.condition-icon-failure {
+  color: #ff5555;
+}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-webtui-theme="catppuccin-mocha">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gatus Status</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@webtui/css@0.1.5/dist/full.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@webtui/theme-catppuccin@0.0.3/dist/index.css" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/lib/htmx.min.js"></script>
+    <script src="/lib/mustache.min.js"></script>
+    <script src="/lib/client-side-templates.js"></script>
+  </head>
+  <body>
+    <main box-="round">
+      <div style="padding: 1ch">
+        <header>
+          <h1>GATUS</h1>
+          <p>Status Monitor · <span id="timestamp"></span></p>
+        </header>
+        <div is-="separator"></div>
+
+        <script id="endpoints-template" type="text/template">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(35ch, 1fr)); gap: 1ch">
+          {{#endpoints}}
+          <div box-="round" shear-="top" class="status-bg-{{statusClass}}">
+            <div class="status-header">
+              <span is-="badge" class="status-bg-{{statusClass}}">{{statusIcon}} {{name}}{{#group}} ({{group}}){{/group}}</span>
+            </div>
+            <div style="padding: 0 1ch 1ch 1ch">
+              {{#hasResult}}
+              <span class="status-{{statusClass}}">{{statusLabel}}</span> · {{formattedDuration}}{{#httpStatus}} · HTTP {{httpStatus}}{{/httpStatus}} · {{formattedTimestamp}}
+              {{#hasConditions}}<br>{{#conditions}}<span class="{{iconClass}}">{{icon}}</span><code>{{condition}}</code> {{/conditions}}{{/hasConditions}}
+              {{/hasResult}}
+              {{^hasResult}}No data{{/hasResult}}
+            </div>
+          </div>
+          {{/endpoints}}
+        </div>
+      </script>
+
+        <div
+          id="app"
+          hx-ext="client-side-templates"
+          hx-get="/api/v1/endpoints/statuses"
+          hx-trigger="load, every 30s"
+          mustache-template="endpoints-template"
+        >
+          <p><span is-="spinner"></span> Loading...</p>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="/dist/app.js"></script>
+    <script>
+      function updateTimestamp() {
+        const el = document.getElementById('timestamp');
+        if (el) el.textContent = new Date().toLocaleTimeString();
+      }
+      updateTimestamp();
+      setInterval(updateTimestamp, 1000);
+    </script>
+  </body>
+</html>

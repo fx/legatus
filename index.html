@@ -5,11 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gatus Status</title>
     <link rel="stylesheet" href="/styles.css" />
-    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/mustache@4.2.0/mustache.min.js" integrity="sha384-WASZCYHGuIg0bwkJEH65mhmbKS1x4/VKI2bzElPKmL5B3e0UaH45nIdqOm+BUuRA" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/htmx-ext-client-side-templates@2.0.1/client-side-templates.js" integrity="sha384-5HS4cYYiDPe+JJZnvMgSQ6D8BKodgzgxrgv+vrvEzTK0vLTU5ou9BMiyrn+9xGaX" crossorigin="anonymous"></script>
+    <script src="/lib/htmx.min.js"></script>
+    <script src="/lib/mustache.min.js"></script>
+    <script src="/lib/client-side-templates.js"></script>
+    <script>
+      // Color mode initialization
+      (function() {
+        const stored = localStorage.getItem('color-mode') || 'system';
+        document.documentElement.setAttribute('data-mode', stored);
+        if (stored !== 'system') {
+          document.documentElement.setAttribute('data-color', stored);
+        }
+      })();
+    </script>
   </head>
   <body>
+    <!-- Color mode toggle button -->
+    <button type="button" class="mode-toggle" aria-label="Toggle color mode" onclick="toggleMode()">
+      <svg class="mode-icon mode-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="mode-icon mode-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="mode-icon mode-icon-system" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M8 21h8M12 17v4"/></svg>
+    </button>
+
     <!-- Mustache template for endpoints -->
     <template id="endpoints-template">
       <div class="status-grid">
@@ -87,5 +104,22 @@
     </div>
 
     <script type="module" src="/dist/app.js"></script>
+    <script>
+      function toggleMode() {
+        const html = document.documentElement;
+        const current = localStorage.getItem('color-mode') || 'system';
+        // Cycle: light → dark → system → light
+        const next = current === 'light' ? 'dark' : current === 'dark' ? 'system' : 'light';
+
+        html.setAttribute('data-mode', next);
+        localStorage.setItem('color-mode', next);
+
+        if (next === 'system') {
+          html.removeAttribute('data-color');
+        } else {
+          html.setAttribute('data-color', next);
+        }
+      }
+    </script>
   </body>
 </html>

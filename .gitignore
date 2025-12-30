@@ -22,3 +22,4 @@ playwright-report/
 
 # Local Gatus config overrides
 config/*.local.yaml
+screenshots/

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gatus Status</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/lib/htmx.min.js"></script>
+    <script src="/lib/mustache.min.js"></script>
+    <script src="/lib/client-side-templates.js"></script>
+    <script>
+      // Color mode initialization
+      (function() {
+        const stored = localStorage.getItem('color-mode') || 'system';
+        document.documentElement.setAttribute('data-mode', stored);
+        if (stored !== 'system') {
+          document.documentElement.setAttribute('data-color', stored);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Mustache template for endpoints -->
+    <template id="endpoints-template">
+      <div class="main-container">
+        <!-- Header -->
+        <header class="status-header">
+          <h1 class="status-title">Service Status</h1>
+          <div class="status-meta">
+            <button type="button" class="mode-toggle" aria-label="Toggle color mode" onclick="toggleMode()">
+              <svg class="mode-icon mode-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              <svg class="mode-icon mode-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+              <svg class="mode-icon mode-icon-system" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </button>
+            <div class="status-totals">
+              <span class="status-total status-total-healthy" data-filter="healthy"><span class="status-dot"></span>{{healthyCount}}</span>
+              <span class="status-total status-total-unhealthy" data-filter="unhealthy"><span class="status-dot"></span>{{unhealthyCount}}</span>
+              <span class="status-total status-total-unknown" data-filter="unknown"><span class="status-dot"></span>{{unknownCount}}</span>
+            </div>
+            <span class="status-last-check">Last check: {{lastChecked}}</span>
+          </div>
+        </header>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+          <button type="button" class="filter-btn filter-btn-active" data-filter="all">All ({{totalCount}})</button>
+          <button type="button" class="filter-btn" data-filter="healthy">Healthy</button>
+          <button type="button" class="filter-btn" data-filter="unhealthy">Unhealthy</button>
+          <button type="button" class="filter-btn" data-filter="unknown">Unknown</button>
+        </div>
+
+        <!-- Card grid -->
+        <div class="card-grid">
+        {{#endpoints}}
+        <article class="endpoint-card endpoint-card-{{statusClass}}">
+          <header class="card-header">
+            <div class="card-title-section">
+              <h3 class="card-name">{{name}}</h3>
+              {{#group}}
+              <p class="card-group">{{group}}</p>
+              {{/group}}
+            </div>
+            <span class="status-badge status-badge-{{statusClass}}">{{statusLabel}}</span>
+          </header>
+          <div class="card-content">
+            <div class="card-stats-row">
+              <span class="stat-item">
+                <span class="stat-label">Response</span>
+                <span class="stat-value">{{#formattedDuration}}{{formattedDuration}}{{/formattedDuration}}{{^formattedDuration}}--{{/formattedDuration}}</span>
+              </span>
+              {{#httpStatus}}
+              <span class="stat-item">
+                <span class="stat-label">HTTP</span>
+                <span class="stat-value">{{httpStatus}}</span>
+              </span>
+              {{/httpStatus}}
+              <span class="stat-item">
+                <span class="stat-label">Checked</span>
+                <span class="stat-value">{{#formattedTimestamp}}{{formattedTimestamp}}{{/formattedTimestamp}}{{^formattedTimestamp}}--{{/formattedTimestamp}}</span>
+              </span>
+            </div>
+            {{#hasConditions}}
+            <ul class="conditions-list">
+              {{#conditions}}
+              <li class="condition-item">
+                <span class="{{iconClass}}">{{icon}}</span>
+                <code class="condition-text" title="{{condition}}">{{condition}}</code>
+              </li>
+              {{/conditions}}
+            </ul>
+            {{/hasConditions}}
+          </div>
+        </article>
+        {{/endpoints}}
+        </div>
+      </div>
+    </template>
+
+    <!-- Main container with HTMX -->
+    <div
+      id="app"
+      hx-ext="client-side-templates"
+      hx-get="/api/v1/endpoints/statuses"
+      hx-trigger="load, every 30s"
+      mustache-template="endpoints-template"
+    >
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/dist/app.js"></script>
+    <script>
+      function toggleMode() {
+        const html = document.documentElement;
+        const current = localStorage.getItem('color-mode') || 'system';
+        // Cycle: light -> dark -> system -> light
+        const next = current === 'light' ? 'dark' : current === 'dark' ? 'system' : 'light';
+
+        html.setAttribute('data-mode', next);
+        localStorage.setItem('color-mode', next);
+
+        if (next === 'system') {
+          html.removeAttribute('data-color');
+        } else {
+          html.setAttribute('data-color', next);
+        }
+      }
+
+      // Filter functionality
+      function filterCards(status) {
+        const cards = document.querySelectorAll('.endpoint-card');
+        cards.forEach(function(card) {
+          if (status === 'all') {
+            card.style.display = '';
+          } else {
+            const isMatch = card.classList.contains('endpoint-card-' + status);
+            card.style.display = isMatch ? '' : 'none';
+          }
+        });
+
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(function(btn) {
+          btn.classList.toggle('filter-btn-active', btn.dataset.filter === status);
+        });
+      }
+
+      // Set up filter handlers after HTMX swap
+      document.addEventListener('htmx:afterSwap', function(event) {
+        if (event.detail.target.id !== 'app') return;
+
+        document.querySelectorAll('.filter-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            filterCards(this.dataset.filter);
+          });
+        });
+
+        // Also make the totals clickable as filters
+        document.querySelectorAll('.status-total[data-filter]').forEach(function(el) {
+          el.addEventListener('click', function() {
+            filterCards(this.dataset.filter);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

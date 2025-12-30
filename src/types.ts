@@ -42,6 +42,7 @@ export interface ProcessedEndpoint {
   key: string;
   statusClass: 'healthy' | 'unhealthy' | 'unknown';
   statusLabel: 'Healthy' | 'Unhealthy' | 'Unknown';
+  statusIcon: 'OK' | '!!' | '--';
   hasResult: boolean;
   formattedDuration?: string;
   formattedTimestamp?: string;
@@ -53,4 +54,14 @@ export interface ProcessedEndpoint {
 /** Preprocessed data for Mustache template */
 export interface ProcessedEndpointsData {
   endpoints: ProcessedEndpoint[];
+  healthyCount: number;
+  unhealthyCount: number;
+  unknownCount: number;
+  totalCount: number;
+  lastChecked: string;
+  unhealthyEndpoints: ProcessedEndpoint[];
+  unknownEndpoints: ProcessedEndpoint[];
+  hasUnhealthy: boolean;
+  hasUnknown: boolean;
+  hasIssues: boolean;
 }
