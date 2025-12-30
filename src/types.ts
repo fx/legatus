@@ -54,4 +54,14 @@ export interface ProcessedEndpoint {
 /** Preprocessed data for Mustache template */
 export interface ProcessedEndpointsData {
   endpoints: ProcessedEndpoint[];
+  healthyCount: number;
+  unhealthyCount: number;
+  unknownCount: number;
+  totalCount: number;
+  lastChecked: string;
+  unhealthyEndpoints: ProcessedEndpoint[];
+  unknownEndpoints: ProcessedEndpoint[];
+  hasUnhealthy: boolean;
+  hasUnknown: boolean;
+  hasIssues: boolean;
 }

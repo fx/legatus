@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run build && bun dev-server.ts",
-    "build": "bun build src/app.ts --outdir dist --minify",
+    "build": "bun build src/app.ts --outdir dist --minify --format=iife",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",

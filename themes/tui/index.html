@@ -1,139 +1,61 @@
 <!doctype html>
-<html lang="en" data-webtui-theme="dark">
+<html lang="en" data-webtui-theme="catppuccin-mocha">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gatus Status</title>
-    <!-- WebTUI CSS - full bundle with all components -->
-    <link rel="stylesheet" href="https://unpkg.com/@webtui/css@0.1.5/dist/full.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@webtui/css@0.1.5/dist/full.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@webtui/theme-catppuccin@0.0.3/dist/index.css" />
     <link rel="stylesheet" href="/styles.css" />
     <script src="/lib/htmx.min.js"></script>
     <script src="/lib/mustache.min.js"></script>
     <script src="/lib/client-side-templates.js"></script>
   </head>
   <body>
-    <div class="terminal-container">
-      <!-- Header -->
-      <header box-="square" class="terminal-header">
-        <h1>[ GATUS STATUS MONITOR ]</h1>
-      </header>
+    <main box-="round">
+      <div style="padding: 1ch">
+        <header>
+          <h1>GATUS</h1>
+          <p>Status Monitor · <span id="timestamp"></span></p>
+        </header>
+        <div is-="separator"></div>
 
-      <!-- Mustache template for endpoints -->
-      <template id="endpoints-template">
-        <table>
-          <thead>
-            <tr>
-              <th class="col-status">STATUS</th>
-              <th class="col-name">NAME</th>
-              <th class="col-group">GROUP</th>
-              <th class="col-response">RESPONSE</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#endpoints}}
-            <tr>
-              <td class="col-status">
-                <button
-                  type="button"
-                  class="status-btn status-{{statusClass}}"
-                  aria-label="{{name}}{{#group}} ({{group}}){{/group}}: {{statusLabel}}"
-                  popovertarget="popover-{{index}}"
-                >[{{statusIcon}}]</button>
-              </td>
-              <td class="col-name">{{name}}</td>
-              <td class="col-group muted">{{#group}}{{group}}{{/group}}{{^group}}--{{/group}}</td>
-              <td class="col-response">{{#formattedDuration}}{{formattedDuration}}{{/formattedDuration}}{{^formattedDuration}}--{{/formattedDuration}}</td>
-            </tr>
-            {{/endpoints}}
-          </tbody>
-        </table>
-        <!-- Popovers must be outside table for valid HTML -->
-        {{#endpoints}}
-        <div
-          id="popover-{{index}}"
-          popover="auto"
-          class="status-popover"
-          box-="square"
-        >
-          <div class="popover-header">
-            <strong class="popover-name">{{name}}</strong>
-            <span is-="badge" class="status-badge-{{statusClass}}">[{{statusIcon}}]</span>
+        <script id="endpoints-template" type="text/template">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(35ch, 1fr)); gap: 1ch">
+          {{#endpoints}}
+          <div box-="round" shear-="top" class="status-bg-{{statusClass}}">
+            <div class="status-header">
+              <span is-="badge" class="status-bg-{{statusClass}}">{{statusIcon}} {{name}}{{#group}} ({{group}}){{/group}}</span>
+            </div>
+            <div style="padding: 0 1ch 1ch 1ch">
+              {{#hasResult}}
+              <span class="status-{{statusClass}}">{{statusLabel}}</span> · {{formattedDuration}}{{#httpStatus}} · HTTP {{httpStatus}}{{/httpStatus}} · {{formattedTimestamp}}
+              {{#hasConditions}}<br>{{#conditions}}<span class="{{iconClass}}">{{icon}}</span><code>{{condition}}</code> {{/conditions}}{{/hasConditions}}
+              {{/hasResult}}
+              {{^hasResult}}No data{{/hasResult}}
+            </div>
           </div>
-          <hr is-="separator" />
-          {{#group}}
-          <div class="popover-group muted">Group: {{group}}</div>
-          {{/group}}
-          {{#hasResult}}
-          <div class="popover-details">
-            <div class="detail-row">
-              <span class="muted">Response:</span>
-              <span>{{formattedDuration}}</span>
-            </div>
-            {{#httpStatus}}
-            <div class="detail-row">
-              <span class="muted">HTTP:</span>
-              <span>{{httpStatus}}</span>
-            </div>
-            {{/httpStatus}}
-            <div class="detail-row">
-              <span class="muted">Checked:</span>
-              <span>{{formattedTimestamp}}</span>
-            </div>
-            {{#hasConditions}}
-            <hr is-="separator" />
-            <div class="conditions-section">
-              <div class="conditions-title muted">--- Conditions ---</div>
-              <ul class="conditions-list">
-                {{#conditions}}
-                <li class="condition-item">
-                  <span class="{{iconClass}}">{{icon}}</span>
-                  <code>{{condition}}</code>
-                </li>
-                {{/conditions}}
-              </ul>
-            </div>
-            {{/hasConditions}}
-          </div>
-          {{/hasResult}}
-          {{^hasResult}}
-          <div class="no-results muted">[NO DATA]</div>
-          {{/hasResult}}
+          {{/endpoints}}
         </div>
-        {{/endpoints}}
-      </template>
+      </script>
 
-      <!-- Main container with HTMX -->
-      <div
-        id="app"
-        box-="square"
-        class="main-content"
-        hx-ext="client-side-templates"
-        hx-get="/api/v1/endpoints/statuses"
-        hx-trigger="load, every 30s"
-        mustache-template="endpoints-template"
-      >
-        <div class="loading-container">
-          <span is-="spinner"></span>
-          <span class="loading-text">Loading...</span>
+        <div
+          id="app"
+          hx-ext="client-side-templates"
+          hx-get="/api/v1/endpoints/statuses"
+          hx-trigger="load, every 30s"
+          mustache-template="endpoints-template"
+        >
+          <p><span is-="spinner"></span> Loading...</p>
         </div>
       </div>
-
-      <!-- Footer -->
-      <footer box-="square" class="terminal-footer">
-        <span class="muted">Auto-refresh: 30s</span>
-        <span class="muted">|</span>
-        <span id="timestamp" class="muted"></span>
-      </footer>
-    </div>
+    </main>
 
     <script type="module" src="/dist/app.js"></script>
     <script>
       function updateTimestamp() {
         const el = document.getElementById('timestamp');
-        if (el) {
-          const now = new Date();
-          el.textContent = now.toLocaleTimeString();
-        }
+        if (el) el.textContent = new Date().toLocaleTimeString();
       }
       updateTimestamp();
       setInterval(updateTimestamp, 1000);

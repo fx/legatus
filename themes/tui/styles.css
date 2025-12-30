@@ -1,286 +1,51 @@
-/* TUI Theme - WebTUI Customizations */
+/* TUI Theme - minimal overrides, let WebTUI handle styling */
 
-/* Terminal green color scheme overrides */
-:root {
-  /* Override WebTUI variables for terminal aesthetic */
-  --background0: #000000;
-  --background1: #0a0a0a;
-  --background2: #111111;
-  --background3: #1a1a1a;
-
-  --foreground0: #00ff00;
-  --foreground1: #00cc00;
-  --foreground2: #008800;
-
-  /* WebTUI component colors */
-  --box-border-color: var(--foreground0);
-  --table-border-color: var(--foreground0);
-  --separator-color: var(--foreground1);
-
-  /* Custom status colors */
-  --status-ok: #00ff00;
-  --status-error: #ff0000;
-  --status-unknown: #666666;
-
-  /* Font - ensure monospace */
-  --font-family: monospace;
+/* Status header for badge positioning */
+.status-header {
+  padding: 0 1ch;
 }
 
-/* Extend WebTUI's component layer for custom styles */
-@layer components {
-  body {
-    background-color: var(--background0);
-    color: var(--foreground0);
-    min-height: 100vh;
-  }
+.status-header [is-="badge"]::before,
+.status-header [is-="badge"]::after {
+  background: transparent;
+}
 
-  .terminal-container {
-    max-width: 80ch;
-    margin: 0 auto;
-    padding: 1lh 1ch;
-  }
+/* Make separator full width */
+[is-="separator"] {
+  width: 100%;
+}
 
-  /* Header styling */
-  .terminal-header {
-    text-align: center;
-    margin-bottom: 0;
-    border-bottom: none;
-  }
+/* Status background colors - DOS ANSI 16-color palette */
+.status-bg-healthy {
+  background: #00aa00;
+}
 
-  .terminal-header h1 {
-    margin: 0;
-    padding: 0.5lh 2ch;
-    font-size: 1rem;
-    font-weight: bold;
-    letter-spacing: 0.1em;
-    color: var(--foreground0);
-  }
+.status-bg-unhealthy {
+  background: #aa0000;
+}
 
-  /* Main content area - connects to header/footer */
-  .main-content {
-    border-top: none;
-    border-bottom: none;
-    min-height: 20lh;
-  }
+.status-bg-unknown {
+  background: #555555;
+}
 
-  /* Footer styling */
-  .terminal-footer {
-    display: flex;
-    justify-content: center;
-    gap: 2ch;
-    padding: 0.5lh 2ch;
-    border-top: none;
-    font-size: 0.875rem;
-  }
+/* Status text colors - DOS ANSI 16-color palette (bright) */
+.status-healthy {
+  color: #55ff55;
+}
 
-  /* Table customizations */
-  table {
-    width: 100%;
-    border: none;
-  }
+.status-unhealthy {
+  color: #ff5555;
+}
 
-  table th {
-    color: var(--foreground0);
-    background-color: rgba(0, 255, 0, 0.05);
-  }
+.status-unknown {
+  color: #aaaaaa;
+}
 
-  table tbody tr:hover {
-    background-color: rgba(0, 255, 0, 0.1);
-  }
+/* Condition result colors - DOS ANSI 16-color palette (bright) */
+.condition-icon-success {
+  color: #55ff55;
+}
 
-  /* Column widths using ch units */
-  .col-status {
-    width: 10ch;
-  }
-
-  .col-name {
-    min-width: 20ch;
-  }
-
-  .col-group {
-    min-width: 15ch;
-  }
-
-  .col-response {
-    width: 12ch;
-    text-align: right;
-  }
-
-  /* Muted text helper */
-  .muted {
-    color: var(--foreground2);
-  }
-
-  /* Status button styling */
-  .status-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: bold;
-    padding: 0;
-    color: inherit;
-  }
-
-  .status-btn:hover {
-    text-decoration: underline;
-  }
-
-  .status-btn:focus {
-    outline: 1px solid var(--foreground0);
-    outline-offset: 2px;
-  }
-
-  .status-healthy {
-    color: var(--status-ok);
-  }
-
-  .status-unhealthy {
-    color: var(--status-error);
-  }
-
-  .status-unknown {
-    color: var(--status-unknown);
-  }
-
-  /* Badge status variants */
-  .status-badge-healthy {
-    --badge-color: transparent;
-    --badge-text: var(--status-ok);
-  }
-
-  .status-badge-unhealthy {
-    --badge-color: transparent;
-    --badge-text: var(--status-error);
-  }
-
-  .status-badge-unknown {
-    --badge-color: transparent;
-    --badge-text: var(--status-unknown);
-  }
-
-  /* Popover styling */
-  .status-popover {
-    padding: 1lh 2ch;
-    background-color: var(--background0);
-    color: var(--foreground0);
-    max-width: 40ch;
-    margin: 0;
-  }
-
-  .status-popover::backdrop {
-    background: rgba(0, 0, 0, 0.7);
-  }
-
-  /* Popover header */
-  .popover-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2ch;
-    margin-bottom: 0.5lh;
-  }
-
-  .popover-name {
-    text-transform: uppercase;
-  }
-
-  /* Popover group */
-  .popover-group {
-    font-size: 0.875rem;
-    margin-bottom: 0.5lh;
-  }
-
-  /* Popover details */
-  .popover-details {
-    font-size: 0.875rem;
-  }
-
-  .detail-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.25lh;
-  }
-
-  /* Conditions section */
-  .conditions-section {
-    margin-top: 0.5lh;
-  }
-
-  .conditions-title {
-    text-align: center;
-    margin-bottom: 0.5lh;
-  }
-
-  .conditions-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .condition-item {
-    display: flex;
-    align-items: center;
-    gap: 1ch;
-    margin-bottom: 0.25lh;
-  }
-
-  .condition-icon-success {
-    color: var(--status-ok);
-  }
-
-  .condition-icon-failure {
-    color: var(--status-error);
-  }
-
-  .condition-item code {
-    font-size: 0.75rem;
-    background: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 32ch;
-  }
-
-  /* No results message */
-  .no-results {
-    font-size: 0.875rem;
-    text-align: center;
-    padding: 0.5lh 0;
-  }
-
-  /* Loading state */
-  .loading-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1lh;
-    min-height: 20lh;
-  }
-
-  .loading-text {
-    animation: blink 1s step-end infinite;
-  }
-
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-
-  /* HTMX loading indicator */
-  .htmx-request .loading-container {
-    display: flex;
-  }
-
-  .htmx-request table {
-    opacity: 0.5;
-  }
-
-  /* Separator customization */
-  hr[is-~='separator'] {
-    margin: 0.5lh 0;
-  }
+.condition-icon-failure {
+  color: #ff5555;
 }
